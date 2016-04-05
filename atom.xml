@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://longfengno1.github.io/"/>
-  <updated>2016-03-25T01:29:10.613Z</updated>
+  <updated>2016-04-05T08:55:57.959Z</updated>
   <id>https://longfengno1.github.io/</id>
   
   <author>
@@ -14,6 +14,94 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>数据预处理</title>
+    <link href="https://longfengno1.github.io/2016/04/05/%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86/"/>
+    <id>https://longfengno1.github.io/2016/04/05/数据预处理/</id>
+    <published>2016-04-05T08:42:44.000Z</published>
+    <updated>2016-04-05T08:55:57.959Z</updated>
+    
+    <content type="html">&lt;p&gt;在对数据进行分析前，对数据的预处理可以提高分类预测的准确性、有效性和可伸缩性。以下是几种数据预处理：&lt;br&gt;&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;&lt;br&gt;1、数据清理：为了消除和减少数据噪声和处理缺失值的数据预处理。虽然大部分的分类算法都会处理噪声和缺失值，但在进行分类对数据的清理可以减少学习时的混乱。&lt;br&gt;2、相关性分析：数据中很多属性可能与分类预测任务不相关或是冗余的。因此在分类前进行相关性分析可以删除学习过程中不相关的或是冗余的属性，提高分类预测的效率和准确率。&lt;br&gt;3、数据变换：分类前的数据变换主要有概念分层和规范化两种。概念分层就是连续值属性概化为离散的区间，压缩了原来的训练数据，学习时可以减少输入输出操作。规范化是将给定属性的所有值按比例缩放，使得它们落入较小的指定区间，比如落入【0，1】内，可以防止具有较大初始域的属性相对于具有较小初始域的属性权种过大，该方法常用于神经网络和距离度量方法。&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;引自：方匡南. 基于数据挖掘的分类和聚类算法研究及R语言实现[D]. 暨南大学, 2007.&lt;/em&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;h1 id=&quot;数据缺失&quot;&gt;&lt;a href=&quot;#数据缺失&quot; class=&quot;headerlink&quot; title=&quot;数据缺失&quot;&gt;&lt;/a&gt;数据缺失&lt;/h1&gt;&lt;p&gt;当处理含有缺失值（NA）的数据时，可以运用以下几种最常见的策略：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;将含有缺失值的案例剔除。&lt;/li&gt;
+&lt;li&gt;根据变量之间的相关性关系填补缺失值。&lt;/li&gt;
+&lt;li&gt;根据案例之间的相似性填补缺失值。&lt;/li&gt;
+&lt;li&gt;使用能够处理缺失值数据的工具。&lt;br&gt;下文的例子都用到了”DMwR”包，读取数据代码如下：&lt;blockquote&gt;
+&lt;p&gt;library(DMwR)&lt;br&gt;data(algae)&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;将缺失部分剔除&quot;&gt;&lt;a href=&quot;#将缺失部分剔除&quot; class=&quot;headerlink&quot; title=&quot;将缺失部分剔除&quot;&gt;&lt;/a&gt;将缺失部分剔除&lt;/h2&gt;&lt;p&gt;将含有缺失值的案例剔除非常容易实现，尤其是当这些记录所占的比例在可用数据集中非常小的时候，这个选择就比较合理。因此，我们在选择这个方案时先检查观测值，或者至少得到这些观测值的个数。&lt;br&gt;例如：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;algae[!complete.case(algae),]&lt;br&gt;    …&lt;br&gt;    …&lt;br&gt;  nrow(algae[!complete.case(algae),])&lt;br&gt;  [1] 16&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;函数complete.case()产生一个布尔值向量，该向量的元素个数与algae数据框中的行数相同，如果数据框的相应行中不含NA值，则函数返回TRUE。如果直接删除所有含有至少一个NA的样本，我们可以输入：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;algae&amp;lt;-na.omit(algae)&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;然而这种办法太过极端，我们一般不采用。但是对于某些缺失值太多的样本我们可以直接剔除，因为他们几乎是无用的样本。观测方法可通过如下代码：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;apply(algae,1,function(x) sum(is.na(x)))&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;然而之前我们加载的”DMwR”包中有相关处理函数，应用如下：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;algae&amp;lt;-algae[-manyNAs(algae),]&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;函数manyNAs()的功能是找出缺失值个数大于列数20%的行，第二个参数默认值是0.2。&lt;/p&gt;
+&lt;h2 id=&quot;用最高频率来填补缺失值&quot;&gt;&lt;a href=&quot;#用最高频率来填补缺失值&quot; class=&quot;headerlink&quot; title=&quot;用最高频率来填补缺失值&quot;&gt;&lt;/a&gt;用最高频率来填补缺失值&lt;/h2&gt;&lt;p&gt;填补含有缺失值记录的另一个方法是尝试找到这些缺失值最可能的值。这里也有多种策略可以选择，不同策略对逼近程度和算法复杂度的权衡不同。&lt;br&gt;填补缺失数据最简便和快捷的方法是使用一些代表中心趋势的值。代表中心趋势的值反映了变量分布的最常见值，因此中心趋势值是最自然的选择。然而，中心趋势值也有很多种，如平均值、中位数、众数等。如何选择还要由变量的分布决定。对于接近正态分布来说，所有的观测值都较好地聚集在平均值周围，平均数就是最佳选择。然而对于偏态分布，平均值就不适用。另一方面，离群值（极值）的存在会扭曲平均值（这些可以通过箱式图观测到）。下面我们列举几个填补例子：&lt;br&gt;用平均值填补：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;algae[48,”mxPH”]&amp;lt;-mean(algae$mxPH,na.rm=T)&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;用中位数填补：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;algae[is.na(algae$Chla),”Chla”]&amp;lt;-median(algae$Chla,na.rm=T)&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;其中，na.rm是使计算时忽略缺失数据。当然，我们例子中用到的包下也提供了一个函数centralImputation()可以用数据的中心趋势值来填补缺失值。对数值型变量使用中位数，对名义变量使用众数。应用如下：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;data(algae)&lt;br&gt;  algae&amp;lt;-algae[-manyNAs(algae),]&lt;br&gt;  algae&amp;lt;-centralImputation(algae&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;上述方法虽然快捷方便，但是它可能导致较大的数据偏差，影响后期的数据分析工作。&lt;/p&gt;
+&lt;h2 id=&quot;通过变量的相关关系来填补缺失值&quot;&gt;&lt;a href=&quot;#通过变量的相关关系来填补缺失值&quot; class=&quot;headerlink&quot; title=&quot;通过变量的相关关系来填补缺失值&quot;&gt;&lt;/a&gt;通过变量的相关关系来填补缺失值&lt;/h2&gt;&lt;p&gt;另一种获得较少偏差填补缺失值的方法是探寻变量之间的相关关系。我们可以通过以下命令：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;symnum(cor(algae[,4:18],use=”complete.obs”))&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;函数cor()的功能是产生变量之间的相关值矩阵，设定参数use=”complete.obs”可以使R在计算相关值时忽略含有NA的纪录。而函数symnum()是用来改善结果的输出形式的。&lt;br&gt;在找到相关性较高的两个变量后，我们开始寻找他们之间的线性相关关系，如下：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;data(algae)&lt;br&gt;  algae&amp;lt;-algae[-manyNAs(algae),]&lt;br&gt;  lm(PO4~oPO4,data=algae)&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;然后，我们通过线性关系计算缺失值的填补值。&lt;br&gt;如果PO4中存在多个缺失值，我们也可以通过构造一个函数来完成，如下：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;data(algae)&lt;br&gt;  algae&amp;lt;-algae[-manyNAs(algae),]&lt;br&gt;  fillPO4&amp;lt;-function(oP){&lt;br&gt;        if(is.na(oP))&lt;br&gt;            return(NA)&lt;br&gt;        else return(42.897+1.293*oP)&lt;br&gt;    }&lt;br&gt;  algae[is.na(algae$PO4),”PO4”]&amp;lt;-sapply(algae[is.na(algae$PO4),”oPO4”],fillPO4)&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;函数sapply()的第一个参数是一个向量，第二个参数是一个函数。作用是将函数结果应用到第一个参数中向量的每一个元素。&lt;br&gt;在上面的例子中由于我们使用的是相关值，所以只用到了数值变量而排除了名义变量与缺失值之间的关系。针对这个，我们可以通过直方图等形式进行观测（这里不多赘述，感兴趣的可以查阅原书）。&lt;/p&gt;
+&lt;h2 id=&quot;通过探索案例之间的相似性来填补缺失值&quot;&gt;&lt;a href=&quot;#通过探索案例之间的相似性来填补缺失值&quot; class=&quot;headerlink&quot; title=&quot;通过探索案例之间的相似性来填补缺失值&quot;&gt;&lt;/a&gt;通过探索案例之间的相似性来填补缺失值&lt;/h2&gt;&lt;p&gt;除了变量之间的相关性外，多个样本（行）之间的相似性也可以用来填补缺失值。度量相似性的指标有很多，常用的是欧式距离，这个距离可以非正式的定义为任何两个案例之的观测值之差的平方和。书中提供的包的函数knnImputation()可以实现上述操作，这个函数用一个欧式距离的变种来找到任何个案最近的k个邻居。使用方法如下：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;algae&amp;lt;-knnImputation(algae,k=10)&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;用中位数来填补：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;algae&amp;lt;-knnImputation(algae,k=10,meth=”median”)&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;#小结&lt;br&gt;综合上述几个方法，各有优缺点，具体如何选择还应该根据分析领域的知识来确定。此外，根据个案之间的相似性来填补缺失值也有不合理处，例如可能存在不相关的变量扭曲相似性。对于这些大数据集问题，可以通过随机抽取样本的方法来计算它们之间的相似性。&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;引自：《数据挖掘与R语言》（葡）Luis Torgo著&lt;/em&gt;&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;在对数据进行分析前，对数据的预处理可以提高分类预测的准确性、有效性和可伸缩性。以下是几种数据预处理：&lt;br&gt;
+    
+    </summary>
+    
+      <category term="数据挖掘" scheme="https://longfengno1.github.io/categories/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98/"/>
+    
+    
+      <category term="R语言" scheme="https://longfengno1.github.io/tags/R%E8%AF%AD%E8%A8%80/"/>
+    
+  </entry>
   
   <entry>
     <title>Hexo+Github搭建博客中的一些小问题</title>
