@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://longfengno1.github.io/"/>
-  <updated>2016-04-06T02:50:40.295Z</updated>
+  <updated>2016-04-11T01:36:21.403Z</updated>
   <id>https://longfengno1.github.io/</id>
   
   <author>
@@ -14,6 +14,164 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>数据挖掘算法的R语言实现</title>
+    <link href="https://longfengno1.github.io/2016/04/11/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98%E7%AE%97%E6%B3%95%E7%9A%84R%E8%AF%AD%E8%A8%80%E5%AE%9E%E7%8E%B0/"/>
+    <id>https://longfengno1.github.io/2016/04/11/数据挖掘算法的R语言实现/</id>
+    <published>2016-04-11T01:24:27.000Z</published>
+    <updated>2016-04-11T01:36:21.403Z</updated>
+    
+    <content type="html">&lt;h1 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h1&gt;&lt;p&gt;学习数据挖掘已经有一段时间了，相关的文章和书也看了一些，感觉学习这个的关键还是离不开其中形形色色的算法。作为一个初学者，我们也不奢求创新改进个算法。先从基础做起，学会各个基础算法的思想与实现。学习算法的过程是十分枯燥的，但是如果学习的过程能够实践，例如使用R语言实践一下，将一堆头痛眼花的数据转化成一张炫酷的图，这无疑是十分有成就感的。所以，我就最近学习的资料，整理了一些算法与R语言的实现方法分享一下。由于篇幅的问题，后面提到的函数我都没有详细介绍了，想了解的可以使用&lt;code&gt;&amp;gt;?函数名&lt;/code&gt;或&lt;code&gt;&amp;gt;??函数名&lt;/code&gt;查看。&lt;br&gt;&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h1 id=&quot;分类&quot;&gt;&lt;a href=&quot;#分类&quot; class=&quot;headerlink&quot; title=&quot;分类&quot;&gt;&lt;/a&gt;分类&lt;/h1&gt;&lt;h2 id=&quot;1、KNN算法&quot;&gt;&lt;a href=&quot;#1、KNN算法&quot; class=&quot;headerlink&quot; title=&quot;1、KNN算法&quot;&gt;&lt;/a&gt;1、KNN算法&lt;/h2&gt;&lt;p&gt;K——最临近方法（k Nearest Neighbors，简称KNN）是实际运用中经常被采用的一种基于距离的分类算法。&lt;/p&gt;
+&lt;p&gt;基本思想：&lt;br&gt;假定每个类包含多个训练数据，且每个训练数据都有一个唯一的类别标记，计算每个训练数据到待分类元组的距离，取和待分类元组距离最近的k个训练数据，k个数据中哪个类别的训练数据占多数，则待分类元组就属于哪个类别。&lt;/p&gt;
+&lt;p&gt;主要函数：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;knn()&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;加载R中的class库：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&gt;library(class)&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;实例：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&gt;data(iris3)&lt;br&gt;#选取前30个数据作为训练数据&lt;br&gt;&gt;train&amp;lt;-rbind(iris[1:30,,1],iris[1:30,,2],iris[1:30,,3])&lt;br&gt;#剩下的作为测试数据&lt;br&gt;&gt;test&amp;lt;-rbind(iris[31:50,,1],iris[31:50,,2],iris[31:50,,3])&lt;br&gt;&gt;c1&amp;lt;-factor(c(rep(“s”,30),rep(“c”,30),rep(“v”,30)))&lt;br&gt;#进行KNN算法分类&lt;br&gt;&gt;knn(train,test,c1,k=3,prob=TRUE)&lt;br&gt;&gt;attributes(.Last.value)&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&quot;2、决策树算法（C4-5）&quot;&gt;&lt;a href=&quot;#2、决策树算法（C4-5）&quot; class=&quot;headerlink&quot; title=&quot;2、决策树算法（C4,5）&quot;&gt;&lt;/a&gt;2、决策树算法（C4,5）&lt;/h2&gt;&lt;p&gt;主要函数：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;J48()&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;准备工作：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&gt;install.packages(‘rJava’)&lt;br&gt;&gt;install.packages(‘party’)&lt;br&gt;&gt;install.packages(‘RWeka’)&lt;br&gt;&gt;install.packages(‘partykit’)&lt;br&gt;&gt;library(RWeka)&lt;br&gt;&gt;library(party)&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;实例：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&gt;oldpar=par(mar=c(3,3,1.5,1),mgp=c(1.5,0.5,0),cex=0.3)&lt;br&gt;&gt;data(iris)&lt;br&gt;&gt;m1&amp;lt;-J48(Species~.,data=iris)&lt;br&gt;&gt;m1&lt;br&gt;&gt;table(iris$Species,predict(m1))&lt;br&gt;&gt;write_to_dot(m1)&lt;br&gt;&gt;if(require(“party”,quietly=TRUE)) plot(m1)&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;生成树如下：&lt;br&gt;&lt;img src=&quot;http://upload-images.jianshu.io/upload_images/1863202-0377acaefc8ac97d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240&quot; alt=&quot;C4,5生成的决策树&quot;&gt;&lt;/p&gt;
+&lt;h2 id=&quot;3、CART算法&quot;&gt;&lt;a href=&quot;#3、CART算法&quot; class=&quot;headerlink&quot; title=&quot;3、CART算法&quot;&gt;&lt;/a&gt;3、CART算法&lt;/h2&gt;&lt;p&gt;CART(Classification and Regression Tree，分类与回归树)。&lt;br&gt;主要函数：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;tree()&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;准备工作：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&gt;install.packages(‘tree’)&lt;br&gt;&gt;library(tree)&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;实例：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;#设置窗口参数&lt;br&gt;&gt;oldpar=par(mar=c(3,3,1.5,1),mgp=c(1.5,0.5,0),cex=0.7)&lt;br&gt;&gt;data(iris)&lt;br&gt;#对品种进行CART分类&lt;br&gt;&gt;ir.tr=tree(Species~.,iris)&lt;br&gt;&gt;summary(ir.tr)&lt;br&gt;#画决策树图&lt;br&gt;&gt;plot(ir.tr):text(ir.tr)&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;生成树如下：&lt;br&gt;&lt;img src=&quot;http://upload-images.jianshu.io/upload_images/1863202-060c899e0b5b0022.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240&quot; alt=&quot;CART生成的决策树&quot;&gt;&lt;/p&gt;
+&lt;h2 id=&quot;4、BP神经网络算法&quot;&gt;&lt;a href=&quot;#4、BP神经网络算法&quot; class=&quot;headerlink&quot; title=&quot;4、BP神经网络算法&quot;&gt;&lt;/a&gt;4、BP神经网络算法&lt;/h2&gt;&lt;p&gt;主要函数：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;nnet()&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;准备工作：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&gt;install.packages(‘nnet’)&lt;br&gt;&gt;library(nnet)&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;实例：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&gt;data(iris3)&lt;br&gt;&gt;ir&amp;lt;-rbind(iris3[,,1],iris3[,,2],iris3[,,3])&lt;br&gt;&gt;targets&amp;lt;-class.ind(c(rep(“s”,50),rep(“c”,50),rep(“v”,50)))&lt;br&gt;#抽取25个样本&lt;br&gt;&gt;samp&amp;lt;-c(sample(1:50,25),sample(51:100,25),sample(101:150,25))&lt;br&gt;&gt;ir1&amp;lt;-nnet(ir[samp,],targets[samp,],size=2,rang=0.1,decay=5e-4,maxit=200)&lt;br&gt;&gt;test.c1&amp;lt;-function(true,pred){&lt;br&gt;true&amp;lt;-max.col(true)&lt;br&gt;cres&amp;lt;-max.col(pred)&lt;br&gt;table(true,cres)&lt;br&gt;}&lt;br&gt;#对样本以外的数据的测试&lt;br&gt;&gt;test.c1(targets[-samp,],predict(ir1,ir[-samp,]))&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h1 id=&quot;聚类&quot;&gt;&lt;a href=&quot;#聚类&quot; class=&quot;headerlink&quot; title=&quot;聚类&quot;&gt;&lt;/a&gt;聚类&lt;/h1&gt;&lt;h2 id=&quot;1、K-means算法&quot;&gt;&lt;a href=&quot;#1、K-means算法&quot; class=&quot;headerlink&quot; title=&quot;1、K-means算法&quot;&gt;&lt;/a&gt;1、K-means算法&lt;/h2&gt;&lt;p&gt;K-means算法是典型的基于距离的聚类算法，采用距离作为相似性的评价指标，即认为两个对象的距离越近，其相似度就越大。&lt;/p&gt;
+&lt;p&gt;主要函数：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;kmeans()&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;实例：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;#随机生成样本数据&lt;br&gt;&gt;x&amp;lt;-rbind(matrix(rnorm(10000,sd=0.3),ncol=10),matrix(rnorm(10000,mean=1,sd=0.3),ncol=10))&lt;br&gt;&gt;colnames(x)&amp;lt;-c(“x1”,”x2”,”x3”,”x4”,”x5”,”x6”,”x7”,”x8”,”x9”,”x10”)&lt;br&gt;#调用K-means算法&lt;br&gt;&gt;c1&amp;lt;-Kmeans(x,2)&lt;br&gt;&gt;pch1=rep(“1”,1000)&lt;br&gt;&gt;pch2=rep(“2”,1000)&lt;br&gt;&gt;plot(x,col=c1$cluster,pch=c(pch1,pch2))&lt;br&gt;&gt;points(c1$centers,col=3,pch=”*”,cex=3)&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&quot;2、PAM算法&quot;&gt;&lt;a href=&quot;#2、PAM算法&quot; class=&quot;headerlink&quot; title=&quot;2、PAM算法&quot;&gt;&lt;/a&gt;2、PAM算法&lt;/h2&gt;&lt;p&gt;PAM(Partitioning around Medoid，围绕中心点的划分)是最早提出的k-medoids算法之一。它试图对n个对象给出k个划分。最初随机选择k个中心点后，该算法反复地试图找出更好的中心点。&lt;/p&gt;
+&lt;p&gt;主要函数：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;pam()&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;准备工作：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&gt;library(cluster)&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;实例：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&gt;pamx=pam(x,2)&lt;br&gt;&gt;summary(pamx)&lt;br&gt;&gt;plot(pamx,main=”pam效果图”)   #数据集同上&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&quot;3、Clara算法&quot;&gt;&lt;a href=&quot;#3、Clara算法&quot; class=&quot;headerlink&quot; title=&quot;3、Clara算法&quot;&gt;&lt;/a&gt;3、Clara算法&lt;/h2&gt;&lt;p&gt;主要思想：不考虑整个数据集合，选择实际数据的一小部分作为数据的样本，然后用PAM方法从样本中选择中心点。如果样本是以随机形式选取的，它应当足以代表原来的数据集合。从中选出的代表对象（中心点）很可能与从整个数据集合中选出的非常近似Clara抽取数据集合的多个样本，对每个样本应用PAM算法，返回最好的聚类结果作为输出。&lt;/p&gt;
+&lt;p&gt;主要函数：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;clara()&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;准备工作：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&gt;library(cluster)&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;实例：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&gt;clarax=clara(x,2)&lt;br&gt;&gt;clarax&lt;br&gt;&gt;clarax$clusinfo&lt;br&gt;&gt;plot(clarax,main=”clara图”)  #数据集同上&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h1 id=&quot;层次聚类&quot;&gt;&lt;a href=&quot;#层次聚类&quot; class=&quot;headerlink&quot; title=&quot;层次聚类&quot;&gt;&lt;/a&gt;层次聚类&lt;/h1&gt;&lt;h2 id=&quot;1、AGNES算法与DIANA算法&quot;&gt;&lt;a href=&quot;#1、AGNES算法与DIANA算法&quot; class=&quot;headerlink&quot; title=&quot;1、AGNES算法与DIANA算法&quot;&gt;&lt;/a&gt;1、AGNES算法与DIANA算法&lt;/h2&gt;&lt;p&gt;AGNES(Agglomerative Nesting)算法是凝聚的层次聚类方法。最初将每个对象作为一个簇，然后这些簇根据某些准则一步步地合并，直到所有的对象最终合并到一个簇中或某个终结条件被满足。&lt;br&gt;DIANA(Divisive ANAlysis)算法是分裂的层次聚类方法。采用自顶向下的策略，它首先将所有对象置于一个簇中，然后逐渐细分为越来越小的簇，直到每个对象自成一簇或某个终结条件被满足。&lt;/p&gt;
+&lt;p&gt;主要函数：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;agnes()、diana()&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;准备工作：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&gt;library(cluster)&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;实例：&lt;br&gt;AGNES和DIANA算法的比较&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;#将图形显示区划为两部分&lt;br&gt;&gt;par(mfrow=c(1,2))&lt;br&gt;&gt;data(flower)&lt;br&gt;&gt;dai.f=daisy(flower,type=list(asymm=3,ordratio=7))&lt;br&gt;&gt;agn.f=agnes(dai.f,method=”ward”)&lt;br&gt;&gt;plot(agn.f,which.plot=2,cex=0.7,yaxt=”n”,main=”agnes算法的聚类图”)&lt;br&gt;&gt;dia.f=diana(dai.f)  #注意这里dia.f与dai.f不同&lt;br&gt;&gt;plot(dia.f,which.plot=2,main=”diana算法的聚类图”)&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;结果图如下：&lt;br&gt;&lt;img src=&quot;http://upload-images.jianshu.io/upload_images/1863202-2128ea9d6676999a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240&quot; alt=&quot;agnes与diana算法的比较(这个图画的有点丑，大家可以自己试下。。。)&quot;&gt;&lt;/p&gt;
+&lt;h1 id=&quot;基于密度聚类&quot;&gt;&lt;a href=&quot;#基于密度聚类&quot; class=&quot;headerlink&quot; title=&quot;基于密度聚类&quot;&gt;&lt;/a&gt;基于密度聚类&lt;/h1&gt;&lt;p&gt;主要思想：只要临近区域的密度（对象或数据点的数目）超过某个阀值，就继续聚类。&lt;/p&gt;
+&lt;p&gt;优点：可以过滤“噪声”孤立点数据，发现任意形状的簇。&lt;/p&gt;
+&lt;h2 id=&quot;1、DBSCAN算法&quot;&gt;&lt;a href=&quot;#1、DBSCAN算法&quot; class=&quot;headerlink&quot; title=&quot;1、DBSCAN算法&quot;&gt;&lt;/a&gt;1、DBSCAN算法&lt;/h2&gt;&lt;p&gt;DBSCAN(Density-Based Spatial Clustering of Application with Noise)是一个有代表性的基于密度的方法，它根据一个密度阀值来控制簇的增长。&lt;/p&gt;
+&lt;p&gt;主要函数：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;DBSCAN()&lt;br&gt;准备工作：&lt;br&gt;&gt;library(cluster)&lt;br&gt;实例：&lt;br&gt;&gt;dflower&amp;lt;-daisy(flower,type=list(asymm=c(“V1”,”V3”),symm=2,norminal=4,ordinal=c(5,6),ordratio=7,logratio=8))&lt;br&gt;&gt;DBF=DBSCAN(dflower,eps=0.65,MinPts=5,distances=T)&lt;br&gt;&gt;DBF&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h1 id=&quot;基于模型聚类&quot;&gt;&lt;a href=&quot;#基于模型聚类&quot; class=&quot;headerlink&quot; title=&quot;基于模型聚类&quot;&gt;&lt;/a&gt;基于模型聚类&lt;/h1&gt;&lt;h2 id=&quot;1、COBWEB算法&quot;&gt;&lt;a href=&quot;#1、COBWEB算法&quot; class=&quot;headerlink&quot; title=&quot;1、COBWEB算法&quot;&gt;&lt;/a&gt;1、COBWEB算法&lt;/h2&gt;&lt;p&gt;COBWEB是一种流行的简增量概念聚类算法。它以一个分类树的形式创建层次聚类，每个节点对应一个概念，包含该概念的一个概率描述，概述被分在该节点下的对象。&lt;/p&gt;
+&lt;p&gt;主要函数：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Cobweb()&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;准备工作：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&gt;install.packages(‘RWeka’)&lt;br&gt;&gt;library(RWeka)&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;实例：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&gt;com=rbind(cbind(rnorm(20,0,0.5),rnorm(20,0,0.5)),cbind(rnorm(30,5,0.5),rnorm(30,5,0.5)))&lt;br&gt;&gt;clas=factor(rep(2:1,c(20,30)))&lt;br&gt;&gt;dcom=data.frame(com,clas)&lt;br&gt;&gt;c1&amp;lt;-Cobweb(dcom)&lt;br&gt;&gt;c1&lt;br&gt;&gt;c1$class_ids&lt;br&gt;&gt;table(predict(c1),dcom$clas)&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h1 id=&quot;模糊聚类&quot;&gt;&lt;a href=&quot;#模糊聚类&quot; class=&quot;headerlink&quot; title=&quot;模糊聚类&quot;&gt;&lt;/a&gt;模糊聚类&lt;/h1&gt;&lt;h2 id=&quot;1、FCM算法&quot;&gt;&lt;a href=&quot;#1、FCM算法&quot; class=&quot;headerlink&quot; title=&quot;1、FCM算法&quot;&gt;&lt;/a&gt;1、FCM算法&lt;/h2&gt;&lt;p&gt;FCM(Fuzzy C-Means)算法是一个模糊聚类算法，不同于硬划分，模糊聚类方法是一个软划分。对于模糊集来说，一个数据点都是以一定程度属于某个类，也可以同时以不周的程度属于几个类。&lt;/p&gt;
+&lt;p&gt;主要函数：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;fanny()&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;准备工作：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&gt;library(cluster)&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;实例：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&gt;z=rbind(cbind(rnorm(100,0,0.5),rnorm(100,0,0.5)),cbind(rnorm(150,5,0.5),rnorm(150,5,0.5),cbind(rnorm(300,3.2,0.5),rnorm(300,3.2,0.5))))&lt;br&gt;&gt;z&lt;br&gt;&gt;fannyz=fanny(z,3,metric=”SqEuclidean”)&lt;br&gt;&gt;summary(fannyz)&lt;br&gt;&gt;plot(fannyz,main=”模糊算法聚类图”)&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;参考文献&lt;br&gt;&lt;em&gt;方匡南. 基于数据挖掘的分类和聚类算法研究及R语言实现[D]. 暨南大学, 2007.&lt;/em&gt;&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h1&gt;&lt;p&gt;学习数据挖掘已经有一段时间了，相关的文章和书也看了一些，感觉学习这个的关键还是离不开其中形形色色的算法。作为一个初学者，我们也不奢求创新改进个算法。先从基础做起，学会各个基础算法的思想与实现。学习算法的过程是十分枯燥的，但是如果学习的过程能够实践，例如使用R语言实践一下，将一堆头痛眼花的数据转化成一张炫酷的图，这无疑是十分有成就感的。所以，我就最近学习的资料，整理了一些算法与R语言的实现方法分享一下。由于篇幅的问题，后面提到的函数我都没有详细介绍了，想了解的可以使用&lt;code&gt;&amp;gt;?函数名&lt;/code&gt;或&lt;code&gt;&amp;gt;??函数名&lt;/code&gt;查看。&lt;br&gt;
+    
+    </summary>
+    
+      <category term="数据挖掘" scheme="https://longfengno1.github.io/categories/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98/"/>
+    
+    
+      <category term="R语言" scheme="https://longfengno1.github.io/tags/R%E8%AF%AD%E8%A8%80/"/>
+    
+  </entry>
   
   <entry>
     <title>数据预处理</title>

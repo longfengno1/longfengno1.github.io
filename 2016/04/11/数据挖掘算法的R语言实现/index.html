@@ -41,7 +41,7 @@
 <link href="/css/main.css?v=0.5.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo,Github," />
+  <meta name="keywords" content="R语言," />
 
 
 
@@ -59,18 +59,20 @@
 
 
 
-<meta name="description" content="经历了两天多的辛苦，终于完成了自己博客的搭建。我用的是Hexo+Github搭建的静态博客，在参考了很多大神的教程下，最后也算是磕磕绊绊地完成了吧（当然还有很多不足的地方=。=）。">
+<meta name="description" content="前言学习数据挖掘已经有一段时间了，相关的文章和书也看了一些，感觉学习这个的关键还是离不开其中形形色色的算法。作为一个初学者，我们也不奢求创新改进个算法。先从基础做起，学会各个基础算法的思想与实现。学习算法的过程是十分枯燥的，但是如果学习的过程能够实践，例如使用R语言实践一下，将一堆头痛眼花的数据转化成一张炫酷的图，这无疑是十分有成就感的。所以，我就最近学习的资料，整理了一些算法与R语言的实现方法分">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hexo+Github搭建博客中的一些小问题">
-<meta property="og:url" content="https://longfengno1.github.io/2016/03/23/Hexo+Github搭建博客中的一些小问题/index.html">
+<meta property="og:title" content="数据挖掘算法的R语言实现">
+<meta property="og:url" content="https://longfengno1.github.io/2016/04/11/数据挖掘算法的R语言实现/index.html">
 <meta property="og:site_name" content="Xiao's Note">
-<meta property="og:description" content="经历了两天多的辛苦，终于完成了自己博客的搭建。我用的是Hexo+Github搭建的静态博客，在参考了很多大神的教程下，最后也算是磕磕绊绊地完成了吧（当然还有很多不足的地方=。=）。">
-<meta property="og:image" content="http://7xs74n.com1.z0.glb.clouddn.com/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.jpg">
-<meta property="og:updated_time" content="2016-03-25T01:29:10.613Z">
+<meta property="og:description" content="前言学习数据挖掘已经有一段时间了，相关的文章和书也看了一些，感觉学习这个的关键还是离不开其中形形色色的算法。作为一个初学者，我们也不奢求创新改进个算法。先从基础做起，学会各个基础算法的思想与实现。学习算法的过程是十分枯燥的，但是如果学习的过程能够实践，例如使用R语言实践一下，将一堆头痛眼花的数据转化成一张炫酷的图，这无疑是十分有成就感的。所以，我就最近学习的资料，整理了一些算法与R语言的实现方法分">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1863202-0377acaefc8ac97d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1863202-060c899e0b5b0022.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1863202-2128ea9d6676999a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2016-04-11T01:36:21.403Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hexo+Github搭建博客中的一些小问题">
-<meta name="twitter:description" content="经历了两天多的辛苦，终于完成了自己博客的搭建。我用的是Hexo+Github搭建的静态博客，在参考了很多大神的教程下，最后也算是磕磕绊绊地完成了吧（当然还有很多不足的地方=。=）。">
-<meta name="twitter:image" content="http://7xs74n.com1.z0.glb.clouddn.com/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.jpg">
+<meta name="twitter:title" content="数据挖掘算法的R语言实现">
+<meta name="twitter:description" content="前言学习数据挖掘已经有一段时间了，相关的文章和书也看了一些，感觉学习这个的关键还是离不开其中形形色色的算法。作为一个初学者，我们也不奢求创新改进个算法。先从基础做起，学会各个基础算法的思想与实现。学习算法的过程是十分枯燥的，但是如果学习的过程能够实践，例如使用R语言实践一下，将一堆头痛眼花的数据转化成一张炫酷的图，这无疑是十分有成就感的。所以，我就最近学习的资料，整理了一些算法与R语言的实现方法分">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/1863202-0377acaefc8ac97d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
 
 
 
@@ -88,7 +90,7 @@
   };
 </script>
 
-  <title> Hexo+Github搭建博客中的一些小问题 | Xiao's Note </title>
+  <title> 数据挖掘算法的R语言实现 | Xiao's Note </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -239,7 +241,7 @@
             
             
               
-                Hexo+Github搭建博客中的一些小问题
+                数据挖掘算法的R语言实现
               
             
           </h1>
@@ -251,8 +253,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-03-23T15:34:58+08:00" content="2016-03-23">
-              2016-03-23
+            <time itemprop="dateCreated" datetime="2016-04-11T09:24:27+08:00" content="2016-04-11">
+              2016-04-11
             </time>
           </span>
 
@@ -265,8 +267,8 @@
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/随笔/" itemprop="url" rel="index">
-                    <span itemprop="name">随笔</span>
+                  <a href="/categories/数据挖掘/" itemprop="url" rel="index">
+                    <span itemprop="name">数据挖掘</span>
                   </a>
                 </span>
 
@@ -281,8 +283,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/03/23/Hexo+Github搭建博客中的一些小问题/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/03/23/Hexo+Github搭建博客中的一些小问题/" itemprop="commentsCount"></span>
+                <a href="/2016/04/11/数据挖掘算法的R语言实现/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/04/11/数据挖掘算法的R语言实现/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -292,7 +294,7 @@
 
           
           
-             <span id="/2016/03/23/Hexo+Github搭建博客中的一些小问题/" class="leancloud_visitors" data-flag-title="Hexo+Github搭建博客中的一些小问题">
+             <span id="/2016/04/11/数据挖掘算法的R语言实现/" class="leancloud_visitors" data-flag-title="数据挖掘算法的R语言实现">
                &nbsp; | &nbsp;
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye">
@@ -314,27 +316,142 @@
       
 
       
-        <p>经历了两天多的辛苦，终于完成了自己博客的搭建。我用的是Hexo+Github搭建的静态博客，在参考了很多大神的<a href="http://ibruce.info/2013/11/22/hexo-your-blog/" target="_blank" rel="external">教程</a>下，最后也算是磕磕绊绊地完成了吧（当然还有很多不足的地方=。=）。<br><a id="more"></a><br>为什么突然会选择Hexo和Github来搭建自己的博客呢？一是因为markdown，这里强烈推荐下！刚接触markdown时就爱上了这门语言，写文章什么的太方便了，基本不用再用word什么的处理下了。其次，也是一个很重要的原因：Github上搭博客是免费的！作为一个程序猿，什么开源的、免费的东西当然是我最喜欢的东西。</p>
-<p>好了，废话也不多说了，开这个博客的初衷也就是希望能和大家分享一些经验和相互学习。所以，作为我的第一篇文章，就和大家分享一下我在搭建博客中遇到的一些问题。简单的就不多说了，百度一下<strong>Hexo+Github</strong>就会出来一堆教程。而且一些<a href="http://theme-next.iissnan.com/getting-started.html#comment-system-duoshuo" target="_blank" rel="external">官方文档</a>什么的也说的很详细（我用的是Hexo下的Next主题）。下面是我遇到的一些比较纠结的问题：</p>
-<p><strong>1、本地测试时，<a href="http://localhost:4000" target="_blank" rel="external">http://localhost:4000</a>一直登不上。</strong><br>首先，对于Hexo 3.X版本，服务器被独立成了个别模块，所以你必须先安装hexo-server才能使用。在GitBash里输入：</p>
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>学习数据挖掘已经有一段时间了，相关的文章和书也看了一些，感觉学习这个的关键还是离不开其中形形色色的算法。作为一个初学者，我们也不奢求创新改进个算法。先从基础做起，学会各个基础算法的思想与实现。学习算法的过程是十分枯燥的，但是如果学习的过程能够实践，例如使用R语言实践一下，将一堆头痛眼花的数据转化成一张炫酷的图，这无疑是十分有成就感的。所以，我就最近学习的资料，整理了一些算法与R语言的实现方法分享一下。由于篇幅的问题，后面提到的函数我都没有详细介绍了，想了解的可以使用<code>&gt;?函数名</code>或<code>&gt;??函数名</code>查看。<br><a id="more"></a></p>
+<h1 id="分类"><a href="#分类" class="headerlink" title="分类"></a>分类</h1><h2 id="1、KNN算法"><a href="#1、KNN算法" class="headerlink" title="1、KNN算法"></a>1、KNN算法</h2><p>K——最临近方法（k Nearest Neighbors，简称KNN）是实际运用中经常被采用的一种基于距离的分类算法。</p>
+<p>基本思想：<br>假定每个类包含多个训练数据，且每个训练数据都有一个唯一的类别标记，计算每个训练数据到待分类元组的距离，取和待分类元组距离最近的k个训练数据，k个数据中哪个类别的训练数据占多数，则待分类元组就属于哪个类别。</p>
+<p>主要函数：</p>
 <blockquote>
-<p>$ npm install hexo-server –save</p>
+<p>knn()</p>
 </blockquote>
-<p>安装完成后输入以下命令：</p>
+<p>加载R中的class库：</p>
 <blockquote>
-<p>$ hexo server</p>
+<p>>library(class)</p>
 </blockquote>
-<p>或</p>
+<p>实例：</p>
 <blockquote>
-<p>$ hexo s</p>
+<p>>data(iris3)<br>#选取前30个数据作为训练数据<br>>train&lt;-rbind(iris[1:30,,1],iris[1:30,,2],iris[1:30,,3])<br>#剩下的作为测试数据<br>>test&lt;-rbind(iris[31:50,,1],iris[31:50,,2],iris[31:50,,3])<br>>c1&lt;-factor(c(rep(“s”,30),rep(“c”,30),rep(“v”,30)))<br>#进行KNN算法分类<br>>knn(train,test,c1,k=3,prob=TRUE)<br>>attributes(.Last.value)</p>
 </blockquote>
-<p>然后提示你你的网站在<a href="http://localhost:4000" target="_blank" rel="external">http://localhost:4000</a>下启动。<br>我在这里的时候就一直登不上，估计是4000的端口被占用了。最后使用下面的命令修改了端口就成功，如下：</p>
+<h2 id="2、决策树算法（C4-5）"><a href="#2、决策树算法（C4-5）" class="headerlink" title="2、决策树算法（C4,5）"></a>2、决策树算法（C4,5）</h2><p>主要函数：</p>
 <blockquote>
-<p>$ hexo s -p 5000</p>
+<p>J48()</p>
 </blockquote>
-<p><strong>2、在配置_config.yml后，运行hexo g出错。</strong><br>这里大部分的错误就由于没有在“:”后面加空格时所导致的。</p>
-<p><strong>3、使用hexo deploy部署时老是失败</strong><br>这个问题是浪费我时间最多的一个问题了。每次使用hexo deploy部署时就会出现下图的情况：<br><img src="http://7xs74n.com1.z0.glb.clouddn.com/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.jpg" alt=""></p>
-<p>百度了很多方法，最后还在<a href="https://github.com/hexojs/hexo/issues/857" target="_blank" rel="external">这个</a>上面找到了答案。我仔细观察了下自己文档下都没有.deploy这个文件。。所以后来重新又建了一个项目，按照官方文档一步步操作后才成功了。<br>以上就是我搭建过程中的一些经验了，如果感兴趣的或有问题的我们还可以一起讨论。</p>
+<p>准备工作：</p>
+<blockquote>
+<p>>install.packages(‘rJava’)<br>>install.packages(‘party’)<br>>install.packages(‘RWeka’)<br>>install.packages(‘partykit’)<br>>library(RWeka)<br>>library(party)</p>
+</blockquote>
+<p>实例：</p>
+<blockquote>
+<p>>oldpar=par(mar=c(3,3,1.5,1),mgp=c(1.5,0.5,0),cex=0.3)<br>>data(iris)<br>>m1&lt;-J48(Species~.,data=iris)<br>>m1<br>>table(iris$Species,predict(m1))<br>>write_to_dot(m1)<br>>if(require(“party”,quietly=TRUE)) plot(m1)</p>
+</blockquote>
+<p>生成树如下：<br><img src="http://upload-images.jianshu.io/upload_images/1863202-0377acaefc8ac97d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="C4,5生成的决策树"></p>
+<h2 id="3、CART算法"><a href="#3、CART算法" class="headerlink" title="3、CART算法"></a>3、CART算法</h2><p>CART(Classification and Regression Tree，分类与回归树)。<br>主要函数：</p>
+<blockquote>
+<p>tree()</p>
+</blockquote>
+<p>准备工作：</p>
+<blockquote>
+<p>>install.packages(‘tree’)<br>>library(tree)</p>
+</blockquote>
+<p>实例：</p>
+<blockquote>
+<p>#设置窗口参数<br>>oldpar=par(mar=c(3,3,1.5,1),mgp=c(1.5,0.5,0),cex=0.7)<br>>data(iris)<br>#对品种进行CART分类<br>>ir.tr=tree(Species~.,iris)<br>>summary(ir.tr)<br>#画决策树图<br>>plot(ir.tr):text(ir.tr)</p>
+</blockquote>
+<p>生成树如下：<br><img src="http://upload-images.jianshu.io/upload_images/1863202-060c899e0b5b0022.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="CART生成的决策树"></p>
+<h2 id="4、BP神经网络算法"><a href="#4、BP神经网络算法" class="headerlink" title="4、BP神经网络算法"></a>4、BP神经网络算法</h2><p>主要函数：</p>
+<blockquote>
+<p>nnet()</p>
+</blockquote>
+<p>准备工作：</p>
+<blockquote>
+<p>>install.packages(‘nnet’)<br>>library(nnet)</p>
+</blockquote>
+<p>实例：</p>
+<blockquote>
+<p>>data(iris3)<br>>ir&lt;-rbind(iris3[,,1],iris3[,,2],iris3[,,3])<br>>targets&lt;-class.ind(c(rep(“s”,50),rep(“c”,50),rep(“v”,50)))<br>#抽取25个样本<br>>samp&lt;-c(sample(1:50,25),sample(51:100,25),sample(101:150,25))<br>>ir1&lt;-nnet(ir[samp,],targets[samp,],size=2,rang=0.1,decay=5e-4,maxit=200)<br>>test.c1&lt;-function(true,pred){<br>true&lt;-max.col(true)<br>cres&lt;-max.col(pred)<br>table(true,cres)<br>}<br>#对样本以外的数据的测试<br>>test.c1(targets[-samp,],predict(ir1,ir[-samp,]))</p>
+</blockquote>
+<h1 id="聚类"><a href="#聚类" class="headerlink" title="聚类"></a>聚类</h1><h2 id="1、K-means算法"><a href="#1、K-means算法" class="headerlink" title="1、K-means算法"></a>1、K-means算法</h2><p>K-means算法是典型的基于距离的聚类算法，采用距离作为相似性的评价指标，即认为两个对象的距离越近，其相似度就越大。</p>
+<p>主要函数：</p>
+<blockquote>
+<p>kmeans()</p>
+</blockquote>
+<p>实例：</p>
+<blockquote>
+<p>#随机生成样本数据<br>>x&lt;-rbind(matrix(rnorm(10000,sd=0.3),ncol=10),matrix(rnorm(10000,mean=1,sd=0.3),ncol=10))<br>>colnames(x)&lt;-c(“x1”,”x2”,”x3”,”x4”,”x5”,”x6”,”x7”,”x8”,”x9”,”x10”)<br>#调用K-means算法<br>>c1&lt;-Kmeans(x,2)<br>>pch1=rep(“1”,1000)<br>>pch2=rep(“2”,1000)<br>>plot(x,col=c1$cluster,pch=c(pch1,pch2))<br>>points(c1$centers,col=3,pch=”*”,cex=3)</p>
+</blockquote>
+<h2 id="2、PAM算法"><a href="#2、PAM算法" class="headerlink" title="2、PAM算法"></a>2、PAM算法</h2><p>PAM(Partitioning around Medoid，围绕中心点的划分)是最早提出的k-medoids算法之一。它试图对n个对象给出k个划分。最初随机选择k个中心点后，该算法反复地试图找出更好的中心点。</p>
+<p>主要函数：</p>
+<blockquote>
+<p>pam()</p>
+</blockquote>
+<p>准备工作：</p>
+<blockquote>
+<p>>library(cluster)</p>
+</blockquote>
+<p>实例：</p>
+<blockquote>
+<p>>pamx=pam(x,2)<br>>summary(pamx)<br>>plot(pamx,main=”pam效果图”)   #数据集同上</p>
+</blockquote>
+<h2 id="3、Clara算法"><a href="#3、Clara算法" class="headerlink" title="3、Clara算法"></a>3、Clara算法</h2><p>主要思想：不考虑整个数据集合，选择实际数据的一小部分作为数据的样本，然后用PAM方法从样本中选择中心点。如果样本是以随机形式选取的，它应当足以代表原来的数据集合。从中选出的代表对象（中心点）很可能与从整个数据集合中选出的非常近似Clara抽取数据集合的多个样本，对每个样本应用PAM算法，返回最好的聚类结果作为输出。</p>
+<p>主要函数：</p>
+<blockquote>
+<p>clara()</p>
+</blockquote>
+<p>准备工作：</p>
+<blockquote>
+<p>>library(cluster)</p>
+</blockquote>
+<p>实例：</p>
+<blockquote>
+<p>>clarax=clara(x,2)<br>>clarax<br>>clarax$clusinfo<br>>plot(clarax,main=”clara图”)  #数据集同上</p>
+</blockquote>
+<h1 id="层次聚类"><a href="#层次聚类" class="headerlink" title="层次聚类"></a>层次聚类</h1><h2 id="1、AGNES算法与DIANA算法"><a href="#1、AGNES算法与DIANA算法" class="headerlink" title="1、AGNES算法与DIANA算法"></a>1、AGNES算法与DIANA算法</h2><p>AGNES(Agglomerative Nesting)算法是凝聚的层次聚类方法。最初将每个对象作为一个簇，然后这些簇根据某些准则一步步地合并，直到所有的对象最终合并到一个簇中或某个终结条件被满足。<br>DIANA(Divisive ANAlysis)算法是分裂的层次聚类方法。采用自顶向下的策略，它首先将所有对象置于一个簇中，然后逐渐细分为越来越小的簇，直到每个对象自成一簇或某个终结条件被满足。</p>
+<p>主要函数：</p>
+<blockquote>
+<p>agnes()、diana()</p>
+</blockquote>
+<p>准备工作：</p>
+<blockquote>
+<p>>library(cluster)</p>
+</blockquote>
+<p>实例：<br>AGNES和DIANA算法的比较</p>
+<blockquote>
+<p>#将图形显示区划为两部分<br>>par(mfrow=c(1,2))<br>>data(flower)<br>>dai.f=daisy(flower,type=list(asymm=3,ordratio=7))<br>>agn.f=agnes(dai.f,method=”ward”)<br>>plot(agn.f,which.plot=2,cex=0.7,yaxt=”n”,main=”agnes算法的聚类图”)<br>>dia.f=diana(dai.f)  #注意这里dia.f与dai.f不同<br>>plot(dia.f,which.plot=2,main=”diana算法的聚类图”)</p>
+</blockquote>
+<p>结果图如下：<br><img src="http://upload-images.jianshu.io/upload_images/1863202-2128ea9d6676999a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="agnes与diana算法的比较(这个图画的有点丑，大家可以自己试下。。。)"></p>
+<h1 id="基于密度聚类"><a href="#基于密度聚类" class="headerlink" title="基于密度聚类"></a>基于密度聚类</h1><p>主要思想：只要临近区域的密度（对象或数据点的数目）超过某个阀值，就继续聚类。</p>
+<p>优点：可以过滤“噪声”孤立点数据，发现任意形状的簇。</p>
+<h2 id="1、DBSCAN算法"><a href="#1、DBSCAN算法" class="headerlink" title="1、DBSCAN算法"></a>1、DBSCAN算法</h2><p>DBSCAN(Density-Based Spatial Clustering of Application with Noise)是一个有代表性的基于密度的方法，它根据一个密度阀值来控制簇的增长。</p>
+<p>主要函数：</p>
+<blockquote>
+<p>DBSCAN()<br>准备工作：<br>>library(cluster)<br>实例：<br>>dflower&lt;-daisy(flower,type=list(asymm=c(“V1”,”V3”),symm=2,norminal=4,ordinal=c(5,6),ordratio=7,logratio=8))<br>>DBF=DBSCAN(dflower,eps=0.65,MinPts=5,distances=T)<br>>DBF</p>
+</blockquote>
+<h1 id="基于模型聚类"><a href="#基于模型聚类" class="headerlink" title="基于模型聚类"></a>基于模型聚类</h1><h2 id="1、COBWEB算法"><a href="#1、COBWEB算法" class="headerlink" title="1、COBWEB算法"></a>1、COBWEB算法</h2><p>COBWEB是一种流行的简增量概念聚类算法。它以一个分类树的形式创建层次聚类，每个节点对应一个概念，包含该概念的一个概率描述，概述被分在该节点下的对象。</p>
+<p>主要函数：</p>
+<blockquote>
+<p>Cobweb()</p>
+</blockquote>
+<p>准备工作：</p>
+<blockquote>
+<p>>install.packages(‘RWeka’)<br>>library(RWeka)</p>
+</blockquote>
+<p>实例：</p>
+<blockquote>
+<p>>com=rbind(cbind(rnorm(20,0,0.5),rnorm(20,0,0.5)),cbind(rnorm(30,5,0.5),rnorm(30,5,0.5)))<br>>clas=factor(rep(2:1,c(20,30)))<br>>dcom=data.frame(com,clas)<br>>c1&lt;-Cobweb(dcom)<br>>c1<br>>c1$class_ids<br>>table(predict(c1),dcom$clas)</p>
+</blockquote>
+<h1 id="模糊聚类"><a href="#模糊聚类" class="headerlink" title="模糊聚类"></a>模糊聚类</h1><h2 id="1、FCM算法"><a href="#1、FCM算法" class="headerlink" title="1、FCM算法"></a>1、FCM算法</h2><p>FCM(Fuzzy C-Means)算法是一个模糊聚类算法，不同于硬划分，模糊聚类方法是一个软划分。对于模糊集来说，一个数据点都是以一定程度属于某个类，也可以同时以不周的程度属于几个类。</p>
+<p>主要函数：</p>
+<blockquote>
+<p>fanny()</p>
+</blockquote>
+<p>准备工作：</p>
+<blockquote>
+<p>>library(cluster)</p>
+</blockquote>
+<p>实例：</p>
+<blockquote>
+<p>>z=rbind(cbind(rnorm(100,0,0.5),rnorm(100,0,0.5)),cbind(rnorm(150,5,0.5),rnorm(150,5,0.5),cbind(rnorm(300,3.2,0.5),rnorm(300,3.2,0.5))))<br>>z<br>>fannyz=fanny(z,3,metric=”SqEuclidean”)<br>>summary(fannyz)<br>>plot(fannyz,main=”模糊算法聚类图”)</p>
+</blockquote>
+<p>参考文献<br><em>方匡南. 基于数据挖掘的分类和聚类算法研究及R语言实现[D]. 暨南大学, 2007.</em></p>
 
       
     </div>
@@ -349,7 +466,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Hexo-Github/" rel="tag">#Hexo,Github</a>
+            <a href="/tags/R语言/" rel="tag">#R语言</a>
           
         </div>
       
@@ -358,13 +475,13 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2016/04/05/数据预处理/" rel="next" title="数据预处理">
+                <i class="fa fa-chevron-left"></i> 数据预处理
+              </a>
+            
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2016/04/05/数据预处理/" rel="prev" title="数据预处理">
-                数据预处理 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -390,8 +507,8 @@
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2016/03/23/Hexo+Github搭建博客中的一些小问题/"
-           data-title="Hexo+Github搭建博客中的一些小问题" data-url="https://longfengno1.github.io/2016/03/23/Hexo+Github搭建博客中的一些小问题/">
+      <div class="ds-thread" data-thread-key="2016/04/11/数据挖掘算法的R语言实现/"
+           data-title="数据挖掘算法的R语言实现" data-url="https://longfengno1.github.io/2016/04/11/数据挖掘算法的R语言实现/">
       </div>
     
   </div>
@@ -510,7 +627,7 @@
               
             
             
-              <p class="post-toc-empty">此文章未包含目录</p>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#分类"><span class="nav-number">2.</span> <span class="nav-text">分类</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1、KNN算法"><span class="nav-number">2.1.</span> <span class="nav-text">1、KNN算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2、决策树算法（C4-5）"><span class="nav-number">2.2.</span> <span class="nav-text">2、决策树算法（C4,5）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3、CART算法"><span class="nav-number">2.3.</span> <span class="nav-text">3、CART算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4、BP神经网络算法"><span class="nav-number">2.4.</span> <span class="nav-text">4、BP神经网络算法</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#聚类"><span class="nav-number">3.</span> <span class="nav-text">聚类</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1、K-means算法"><span class="nav-number">3.1.</span> <span class="nav-text">1、K-means算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2、PAM算法"><span class="nav-number">3.2.</span> <span class="nav-text">2、PAM算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3、Clara算法"><span class="nav-number">3.3.</span> <span class="nav-text">3、Clara算法</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#层次聚类"><span class="nav-number">4.</span> <span class="nav-text">层次聚类</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1、AGNES算法与DIANA算法"><span class="nav-number">4.1.</span> <span class="nav-text">1、AGNES算法与DIANA算法</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#基于密度聚类"><span class="nav-number">5.</span> <span class="nav-text">基于密度聚类</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1、DBSCAN算法"><span class="nav-number">5.1.</span> <span class="nav-text">1、DBSCAN算法</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#基于模型聚类"><span class="nav-number">6.</span> <span class="nav-text">基于模型聚类</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1、COBWEB算法"><span class="nav-number">6.1.</span> <span class="nav-text">1、COBWEB算法</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#模糊聚类"><span class="nav-number">7.</span> <span class="nav-text">模糊聚类</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1、FCM算法"><span class="nav-number">7.1.</span> <span class="nav-text">1、FCM算法</span></a></li></ol></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator">
