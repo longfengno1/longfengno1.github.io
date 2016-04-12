@@ -68,7 +68,7 @@
 <meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1863202-0377acaefc8ac97d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
 <meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1863202-060c899e0b5b0022.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
 <meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1863202-2128ea9d6676999a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:updated_time" content="2016-04-11T01:56:04.091Z">
+<meta property="og:updated_time" content="2016-04-12T06:01:11.884Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="数据挖掘算法的R语言实现">
 <meta name="twitter:description" content="前言学习数据挖掘已经有一段时间了，相关的文章和书也看了一些，感觉学习这个的关键还是离不开其中形形色色的算法。作为一个初学者，我们也不奢求创新改进个算法。先从基础做起，学会各个基础算法的思想与实现。学习算法的过程是十分枯燥的，但是如果学习的过程能够实践，例如使用R语言实践一下，将一堆头痛眼花的数据转化成一张炫酷的图，这无疑是十分有成就感的。所以，我就最近学习的资料，整理了一些算法与R语言的实现方法分">
@@ -399,8 +399,13 @@
 <h2 id="1、DBSCAN算法"><a href="#1、DBSCAN算法" class="headerlink" title="1、DBSCAN算法"></a>1、DBSCAN算法</h2><p>DBSCAN(Density-Based Spatial Clustering of Application with Noise)是一个有代表性的基于密度的方法，它根据一个密度阀值来控制簇的增长。</p>
 <p>主要函数：</p>
 <blockquote>
-<p>DBSCAN()<br>准备工作：<br>> library(cluster)<br>实例：<br><figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt; dflower&lt;-daisy(flower,type=list(asymm=c(<span class="string">"V1"</span>,<span class="string">"V3"</span>),symm=<span class="number">2</span>,norminal=<span class="number">4</span>,ordinal=c(<span class="number">5</span>,<span class="number">6</span>),ordratio=<span class="number">7</span>,logratio=<span class="number">8</span>))</span><br><span class="line">&gt; DBF=DBSCAN(dflower,eps=<span class="number">0.65</span>,MinPts=<span class="number">5</span>,distances=<span class="literal">T</span>)</span><br><span class="line">&gt; DBF</span><br></pre></td></tr></table></figure></p>
+<p>DBSCAN()</p>
 </blockquote>
+<p>准备工作：</p>
+<blockquote>
+<p>> library(cluster)</p>
+</blockquote>
+<p>实例：<br><figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt; dflower&lt;-daisy(flower,type=list(asymm=c(<span class="string">"V1"</span>,<span class="string">"V3"</span>),symm=<span class="number">2</span>,norminal=<span class="number">4</span>,ordinal=c(<span class="number">5</span>,<span class="number">6</span>),ordratio=<span class="number">7</span>,logratio=<span class="number">8</span>))</span><br><span class="line">&gt; DBF=DBSCAN(dflower,eps=<span class="number">0.65</span>,MinPts=<span class="number">5</span>,distances=<span class="literal">T</span>)</span><br><span class="line">&gt; DBF</span><br></pre></td></tr></table></figure></p>
 <h1 id="基于模型聚类"><a href="#基于模型聚类" class="headerlink" title="基于模型聚类"></a>基于模型聚类</h1><h2 id="1、COBWEB算法"><a href="#1、COBWEB算法" class="headerlink" title="1、COBWEB算法"></a>1、COBWEB算法</h2><p>COBWEB是一种流行的简增量概念聚类算法。它以一个分类树的形式创建层次聚类，每个节点对应一个概念，包含该概念的一个概率描述，概述被分在该节点下的对象。</p>
 <p>主要函数：</p>
 <blockquote>

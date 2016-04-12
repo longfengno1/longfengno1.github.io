@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://longfengno1.github.io/"/>
-  <updated>2016-04-11T01:56:04.091Z</updated>
+  <updated>2016-04-12T06:01:11.884Z</updated>
   <id>https://longfengno1.github.io/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="https://longfengno1.github.io/2016/04/11/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98%E7%AE%97%E6%B3%95%E7%9A%84R%E8%AF%AD%E8%A8%80%E5%AE%9E%E7%8E%B0/"/>
     <id>https://longfengno1.github.io/2016/04/11/数据挖掘算法的R语言实现/</id>
     <published>2016-04-11T01:24:27.000Z</published>
-    <updated>2016-04-11T01:56:04.091Z</updated>
+    <updated>2016-04-12T06:01:11.884Z</updated>
     
     <content type="html">&lt;h1 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h1&gt;&lt;p&gt;学习数据挖掘已经有一段时间了，相关的文章和书也看了一些，感觉学习这个的关键还是离不开其中形形色色的算法。作为一个初学者，我们也不奢求创新改进个算法。先从基础做起，学会各个基础算法的思想与实现。学习算法的过程是十分枯燥的，但是如果学习的过程能够实践，例如使用R语言实践一下，将一堆头痛眼花的数据转化成一张炫酷的图，这无疑是十分有成就感的。所以，我就最近学习的资料，整理了一些算法与R语言的实现方法分享一下。由于篇幅的问题，后面提到的函数我都没有详细介绍了，想了解的可以使用&lt;code&gt;&amp;gt;?函数名&lt;/code&gt;或&lt;code&gt;&amp;gt;??函数名&lt;/code&gt;查看。&lt;br&gt;&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;h1 id=&quot;分类&quot;&gt;&lt;a href=&quot;#分类&quot; class=&quot;headerlink&quot; title=&quot;分类&quot;&gt;&lt;/a&gt;分类&lt;/h1&gt;&lt;h2 id=&quot;1、KNN算法&quot;&gt;&lt;a href=&quot;#1、KNN算法&quot; class=&quot;headerlink&quot; title=&quot;1、KNN算法&quot;&gt;&lt;/a&gt;1、KNN算法&lt;/h2&gt;&lt;p&gt;K——最临近方法（k Nearest Neighbors，简称KNN）是实际运用中经常被采用的一种基于距离的分类算法。&lt;/p&gt;
@@ -105,8 +105,13 @@
 &lt;h2 id=&quot;1、DBSCAN算法&quot;&gt;&lt;a href=&quot;#1、DBSCAN算法&quot; class=&quot;headerlink&quot; title=&quot;1、DBSCAN算法&quot;&gt;&lt;/a&gt;1、DBSCAN算法&lt;/h2&gt;&lt;p&gt;DBSCAN(Density-Based Spatial Clustering of Application with Noise)是一个有代表性的基于密度的方法，它根据一个密度阀值来控制簇的增长。&lt;/p&gt;
 &lt;p&gt;主要函数：&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;DBSCAN()&lt;br&gt;准备工作：&lt;br&gt;&gt; library(cluster)&lt;br&gt;实例：&lt;br&gt;&lt;figure class=&quot;highlight r&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; dflower&amp;lt;-daisy(flower,type=list(asymm=c(&lt;span class=&quot;string&quot;&gt;&quot;V1&quot;&lt;/span&gt;,&lt;span class=&quot;string&quot;&gt;&quot;V3&quot;&lt;/span&gt;),symm=&lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;,norminal=&lt;span class=&quot;number&quot;&gt;4&lt;/span&gt;,ordinal=c(&lt;span class=&quot;number&quot;&gt;5&lt;/span&gt;,&lt;span class=&quot;number&quot;&gt;6&lt;/span&gt;),ordratio=&lt;span class=&quot;number&quot;&gt;7&lt;/span&gt;,logratio=&lt;span class=&quot;number&quot;&gt;8&lt;/span&gt;))&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; DBF=DBSCAN(dflower,eps=&lt;span class=&quot;number&quot;&gt;0.65&lt;/span&gt;,MinPts=&lt;span class=&quot;number&quot;&gt;5&lt;/span&gt;,distances=&lt;span class=&quot;literal&quot;&gt;T&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; DBF&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;DBSCAN()&lt;/p&gt;
 &lt;/blockquote&gt;
+&lt;p&gt;准备工作：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&gt; library(cluster)&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;实例：&lt;br&gt;&lt;figure class=&quot;highlight r&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; dflower&amp;lt;-daisy(flower,type=list(asymm=c(&lt;span class=&quot;string&quot;&gt;&quot;V1&quot;&lt;/span&gt;,&lt;span class=&quot;string&quot;&gt;&quot;V3&quot;&lt;/span&gt;),symm=&lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;,norminal=&lt;span class=&quot;number&quot;&gt;4&lt;/span&gt;,ordinal=c(&lt;span class=&quot;number&quot;&gt;5&lt;/span&gt;,&lt;span class=&quot;number&quot;&gt;6&lt;/span&gt;),ordratio=&lt;span class=&quot;number&quot;&gt;7&lt;/span&gt;,logratio=&lt;span class=&quot;number&quot;&gt;8&lt;/span&gt;))&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; DBF=DBSCAN(dflower,eps=&lt;span class=&quot;number&quot;&gt;0.65&lt;/span&gt;,MinPts=&lt;span class=&quot;number&quot;&gt;5&lt;/span&gt;,distances=&lt;span class=&quot;literal&quot;&gt;T&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; DBF&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
 &lt;h1 id=&quot;基于模型聚类&quot;&gt;&lt;a href=&quot;#基于模型聚类&quot; class=&quot;headerlink&quot; title=&quot;基于模型聚类&quot;&gt;&lt;/a&gt;基于模型聚类&lt;/h1&gt;&lt;h2 id=&quot;1、COBWEB算法&quot;&gt;&lt;a href=&quot;#1、COBWEB算法&quot; class=&quot;headerlink&quot; title=&quot;1、COBWEB算法&quot;&gt;&lt;/a&gt;1、COBWEB算法&lt;/h2&gt;&lt;p&gt;COBWEB是一种流行的简增量概念聚类算法。它以一个分类树的形式创建层次聚类，每个节点对应一个概念，包含该概念的一个概率描述，概述被分在该节点下的对象。&lt;/p&gt;
 &lt;p&gt;主要函数：&lt;/p&gt;
 &lt;blockquote&gt;
