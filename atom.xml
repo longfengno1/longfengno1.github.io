@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://longfengno1.github.io/"/>
-  <updated>2016-04-26T04:22:22.062Z</updated>
+  <updated>2016-08-17T08:14:14.790Z</updated>
   <id>https://longfengno1.github.io/</id>
   
   <author>
@@ -16,19 +16,81 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>基于用户的协同过滤推荐算法</title>
+    <link href="https://longfengno1.github.io/2016/08/17/%E5%9F%BA%E4%BA%8E%E7%94%A8%E6%88%B7%E7%9A%84%E5%8D%8F%E5%90%8C%E8%BF%87%E6%BB%A4%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/"/>
+    <id>https://longfengno1.github.io/2016/08/17/基于用户的协同过滤推荐算法/</id>
+    <published>2016-08-17T08:10:43.000Z</published>
+    <updated>2016-08-17T08:14:14.790Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="说在前面"><a href="#说在前面" class="headerlink" title="说在前面"></a>说在前面</h1><p>本文是作者的一篇学习笔记，简单介绍了下基于用户的协同过滤推荐算法，后续应该还会有实践的内容。希望能有这方面的大神或同道能一起交流、学习。</p>
+<h1 id="基本思想"><a href="#基本思想" class="headerlink" title="基本思想"></a>基本思想</h1><p>基于用户的协同过滤算法是通过用户的历史行为数据发现用户对商品或内容的喜欢(如商品购买，收藏，内容评论或分享)，并对这些喜好进行度量和打分。根据不同用户对相同商品或内容的态度和偏好程度计算用户之间的关系。在有相同喜好的用户间进行商品推荐。简单的说就是如果A,B两个用户都购买了x、y、z三本图书，并且给出了5星的好评。那么A和B就属于同一类用户。可以将A看过的图书w也推荐给用户B。</p>
+<p><img src="http://img.mp.itc.cn/upload/20160323/8e613f8f202c4a82999ba32e3f52a002_th.jpg" alt="基于用户协同过滤算法 的原理图"></p>
+<p>所以，协同过滤算法主要分为两个步骤：</p>
+<p>1、寻找相似的用户集合；</p>
+<p>2、寻找集合中用户喜欢的且目标用户没有的进行推荐。</p>
+<h1 id="具体实现"><a href="#具体实现" class="headerlink" title="具体实现"></a>具体实现</h1><h2 id="寻找用户间的相似度"><a href="#寻找用户间的相似度" class="headerlink" title="寻找用户间的相似度"></a>寻找用户间的相似度</h2><h3 id="1、Jaccard公式"><a href="#1、Jaccard公式" class="headerlink" title="1、Jaccard公式"></a>1、Jaccard公式</h3><p>Jaccard系数主要用于计算符号度量或布尔值度量的个体间的相似度，因为个体的特征属性都是由符号度量或者布尔值标识，因此无法衡量差异具体值的大小，只能获得“是否相同”这个结果，所以Jaccard系数只关心个体间共同具有的特征是否一致这个问题。如果比较X与Y的Jaccard相似系数，只比较xn和yn中相同的个数。</p>
+<p><img src="http://images.cnitblog.com/blog2015/70278/201504/292243027244041.png" alt="Jaccard公式"></p>
+<h3 id="2、皮尔逊相关系数"><a href="#2、皮尔逊相关系数" class="headerlink" title="2、皮尔逊相关系数"></a>2、皮尔逊相关系数</h3><p>皮尔逊相关系统是比欧几里德距离更加复杂的可以判断人们兴趣相似度的一种方法。它在数据不是很规范时，会倾向于给出更好的结果。<br>假定有两个变量X、Y，那么两变量间的皮尔逊相关系数可通过以下公式计算：</p>
+<ul>
+<li>公式一：</li>
+</ul>
+<p><img src="http://dl2.iteye.com/upload/attachment/0094/4268/d1a9f3c9-0bfc-32ee-8bcc-3f7abecc2ee4.gif" alt="皮尔逊相关系数公式一"></p>
+<ul>
+<li>公式二：</li>
+</ul>
+<p><img src="http://dl2.iteye.com/upload/attachment/0094/4270/1c2e8a49-6650-364f-8c0e-35a20146e2a9.gif" alt="皮尔逊相关系数公式二"></p>
+<ul>
+<li>公式三：</li>
+</ul>
+<p><img src="http://dl2.iteye.com/upload/attachment/0094/4272/0a6a07b7-7dfe-3645-9b9a-ee8b0c19b54d.gif" alt="皮尔逊相关系数公式三"></p>
+<ul>
+<li>公式四：</li>
+</ul>
+<p><img src="http://dl2.iteye.com/upload/attachment/0094/4274/922d66d8-2f00-3ab8-845d-1ab9c26a4b92.gif" alt="皮尔逊相关系数公式四"></p>
+<p><strong>上述四个公式等价，其中E是数学期望，cov表示协方差，N表示变量取值的个数。</strong></p>
+<h3 id="3、欧几里德距离评价"><a href="#3、欧几里德距离评价" class="headerlink" title="3、欧几里德距离评价"></a>3、欧几里德距离评价</h3><p>假定两个用户X、Y，均为n维向量，表示用户对n个商品的评分，那么X与Y的欧几里德距离就是：</p>
+<p><img src="http://blog.chinaunix.net/attachment/201205/23/21718047_13377830777Dwd.png" alt="多维欧几里德距离公式"></p>
+<p>数值越小则代表相似度越高，但是对于不同的n，计算出来的距离不便于控制，所以需要进行如下转换：</p>
+<p><img src="http://blog.chinaunix.net/attachment/201205/23/21718047_1337785033ccNN.png" alt="相似度公式"></p>
+<p>使得结果分布在(0,1]上，数值越大，相似度越高。</p>
+<h3 id="4、余弦距离"><a href="#4、余弦距离" class="headerlink" title="4、余弦距离"></a>4、余弦距离</h3><p>余弦距离，也称为余弦相似度，是用向量空间中两个向量余弦值作为衡量两个个体间差异大小的度量值。</p>
+<p>与前面的欧几里德距离相似，用户X、Y为两个n维向量，套用余弦公式，其余弦距离表示为：</p>
+<p><img src="http://pic002.cnblogs.com/images/2012/161247/2012082013563135.png" alt="余弦距离公式"></p>
+<p>即两个向量夹角的余弦值。但是相比欧式距离，余弦距离更加注意两个向量在方向上的相对差异，而不是在空间上的绝对距离，具体可以借助下图来感受两者间的区别：</p>
+<p><img src="http://pic002.cnblogs.com/images/2012/161247/2012082013572893.png" alt="余弦距离与欧式距离的区别"></p>
+<h2 id="推荐物品"><a href="#推荐物品" class="headerlink" title="推荐物品"></a>推荐物品</h2><p>在选取上述方法中的一种得到各个用户之间相似度后，针对目标用户u，我们选出最相似的k个用户，用集合S(u,k)表示，将S中所有用户喜欢的物品提取出来并去除目标用户u已经喜欢的物品。然后对余下的物品进行评分与相似度加权，得到的结果进行排序。最后由排序结果对目标用户u进行推荐。其中，对于每个可能推荐的物品i，用户u对其的感兴趣的程度可以用如下公式计算：</p>
+<p><img src="http://images.cnitblog.com/blog2015/70278/201504/292340566307942.png" alt="用户u对物品i感兴趣的程度"></p>
+<p>rvi表示用户v对i的喜欢程度，即对i的评分，wuv表示用户u和v之间的相似度。 </p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>以上只是简单的介绍了基于用户协同过滤算法的思想与原理，当然这是建立在拥有一定用户数据积累的基础上的，这里不考虑冷启动的问题。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;说在前面&quot;&gt;&lt;a href=&quot;#说在前面&quot; class=&quot;headerlink&quot; title=&quot;说在前面&quot;&gt;&lt;/a&gt;说在前面&lt;/h1&gt;&lt;p&gt;本文是作者的一篇学习笔记，简单介绍了下基于用户的协同过滤推荐算法，后续应该还会有实践的内容。希望能有这方面的大神或同道能一起
+    
+    </summary>
+    
+      <category term="数据挖掘" scheme="https://longfengno1.github.io/categories/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98/"/>
+    
+    
+      <category term="推荐算法" scheme="https://longfengno1.github.io/tags/%E6%8E%A8%E8%8D%90%E7%AE%97%E6%B3%95/"/>
+    
+  </entry>
+  
+  <entry>
     <title>前端学习：从一个悼念页面开始</title>
     <link href="https://longfengno1.github.io/2016/04/26/%E5%89%8D%E7%AB%AF%E6%8A%80%E6%9C%AF%EF%BC%9A%E4%BB%8E%E4%B8%80%E4%B8%AA%E6%82%BC%E5%BF%B5%E9%A1%B5%E9%9D%A2%E5%BC%80%E5%A7%8B/"/>
     <id>https://longfengno1.github.io/2016/04/26/前端技术：从一个悼念页面开始/</id>
     <published>2016-04-26T04:10:43.000Z</published>
     <updated>2016-04-26T04:22:22.062Z</updated>
     
-    <content type="html">&lt;h1 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h1&gt;&lt;p&gt;有段时间没写点什么了，也确实最近在忙些事情。但是，我一直觉得人吸收知识就像牛吃草一样。先吞下去存储在胃里，然后过段时间再取出来咀嚼几番，最后才能吸收。而我咀嚼的方式就是将学习的东西写出来。最近沉浸在枯燥的数据挖掘算法太久，所以便跳出来寻找其他知识来汲取些“水分”。然后，在Github上无聊翻翻的时候，便对前端技术产生了兴趣。&lt;br&gt;&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;h1 id=&quot;准备工作&quot;&gt;&lt;a href=&quot;#准备工作&quot; class=&quot;headerlink&quot; title=&quot;准备工作&quot;&gt;&lt;/a&gt;准备工作&lt;/h1&gt;&lt;p&gt;“工欲善其事，必先利其器”。我们学习一门新的技术，当然希望先准备好相应的环境，以及完备的指导资料。打开百度，输入“前端学习”、“html+css+js”什么的就会蹦出一堆学习网站任君挑选。权威点的，像&lt;a href=&quot;http://www.w3school.com.cn/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;w3school&lt;/a&gt;、&lt;a href=&quot;http://www.runoob.com/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;菜鸟教程&lt;/a&gt;什么的，界面也比较清爽，知识与实践配套结合，都很适合初学者学习。但是，我在这里还是要安利另一个学习网站：&lt;a href=&quot;https://www.freecodecamp.com/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;FreeCodeCamp&lt;/a&gt;。这是个Github上的老牌项目了，11万+的Star也充分说明了其受欢迎的程度。感兴趣的同学可以通过这个&lt;a href=&quot;https://github.com/FreeCodeCamp/FreeCodeCamp&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;传送门&lt;/a&gt;了解下。&lt;br&gt;&lt;img src=&quot;https://camo.githubusercontent.com/60c67cf9ac2db30d478d21755289c423e1f985c6/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f66726565636f646563616d702f776964652d736f6369616c2d62616e6e65722e706e67&quot; alt=&quot;FreeCodeCamp&quot;&gt;&lt;/p&gt;
-&lt;h1 id=&quot;开始学习&quot;&gt;&lt;a href=&quot;#开始学习&quot; class=&quot;headerlink&quot; title=&quot;开始学习&quot;&gt;&lt;/a&gt;开始学习&lt;/h1&gt;&lt;p&gt;至此，我们正式进入学习阶段。你以为我要照着教程开始教你从标签开始认起了吗？当然不可能。这些FreeCodeCamp上都有。我们直接跳到第一个任务：Build a Tribute Page。相比前面的提示性操作不同，这个任务完全让我们自由发挥。当然，他提供了一个示例页面。参考页面的大致外观可以，但是千万不要直接去看源码！然后你会发现，即使一个简单的静态页面，如何去设计它也是一门艺术。下面我便通过自己的经历来举个例子。&lt;br&gt;这是官方的&lt;a href=&quot;https://codepen.io/FreeCodeCamp/full/NNvBQW/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;样例&lt;/a&gt;：&lt;br&gt;&lt;img src=&quot;http://7xs74n.com1.z0.glb.clouddn.com/QQ%E6%88%AA%E5%9B%BE20160426103432.png&quot; alt=&quot;官方样例&quot;&gt;&lt;br&gt;这是我的&lt;a href=&quot;https://codepen.io/longfengno1/full/ONoPpy/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;作品&lt;/a&gt;（其实我是个伪歌迷=。=）：&lt;br&gt;&lt;img src=&quot;http://7xs74n.com1.z0.glb.clouddn.com/QQ%E6%88%AA%E5%9B%BE20160426103557.png&quot; alt=&quot;我的作品&quot;&gt;&lt;br&gt;是不是看起来差不多，至少在预览效果上来看是这样的。可是，当我兴致冲冲地把我的作品发给朋友看的时候，却显示了一个图歪字斜的乱七八糟的页面（捂脸）。为什么会这样，我们看看两个页面的开头就知道了。&lt;br&gt;官方的开头：&lt;br&gt;&lt;figure class=&quot;highlight html&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;tag&quot;&gt;&amp;lt;&lt;span class=&quot;name&quot;&gt;div&lt;/span&gt; &lt;span class=&quot;attr&quot;&gt;class&lt;/span&gt;=&lt;span class=&quot;string&quot;&gt;&quot;container&quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  &lt;span class=&quot;tag&quot;&gt;&amp;lt;&lt;span class=&quot;name&quot;&gt;div&lt;/span&gt; &lt;span class=&quot;attr&quot;&gt;class&lt;/span&gt;=&lt;span class=&quot;string&quot;&gt;&quot;jumbotron&quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;tag&quot;&gt;&amp;lt;&lt;span class=&quot;name&quot;&gt;div&lt;/span&gt; &lt;span class=&quot;attr&quot;&gt;class&lt;/span&gt;=&lt;span class=&quot;string&quot;&gt;&quot;row&quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;      &lt;span class=&quot;tag&quot;&gt;&amp;lt;&lt;span class=&quot;name&quot;&gt;div&lt;/span&gt; &lt;span class=&quot;attr&quot;&gt;class&lt;/span&gt;=&lt;span class=&quot;string&quot;&gt;&quot;col-xs-12&quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
-&lt;p&gt;我的开头：&lt;br&gt;&lt;figure class=&quot;highlight html&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;tag&quot;&gt;&amp;lt;&lt;span class=&quot;name&quot;&gt;div&lt;/span&gt; &lt;span class=&quot;attr&quot;&gt;class&lt;/span&gt;=&lt;span class=&quot;string&quot;&gt;&quot;bodycolor&quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  &lt;span class=&quot;tag&quot;&gt;&amp;lt;&lt;span class=&quot;name&quot;&gt;div&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
-&lt;p&gt;此外，在图片的引用中，我也没有加入自适应相关的类。所以，相比之下，我对于整个页面布局的设计太简陋了。痛定思痛，我便去查阅了一些相关资料。然后才了解到，W3C组织建议把所有网页上的对像放在一个盒(box)中，也就是我们常说的盒模型。盒模型中主要定义了四个区域：外边距(margin)、边框(border)、内容(content)、内边距(padding)。为了方便理解，我选取了两个图，分别从平面和3D的角度来解析这个盒模型：&lt;br&gt;&lt;img src=&quot;http://7xs74n.com1.z0.glb.clouddn.com/QQ%E6%88%AA%E5%9B%BE20160426110401.png&quot; alt=&quot;平面角度&quot;&gt;&lt;br&gt;&lt;img src=&quot;http://7xs74n.com1.z0.glb.clouddn.com/QQ%E6%88%AA%E5%9B%BE20160426110645.png&quot; alt=&quot;3D角度&quot;&gt;&lt;br&gt;网页的设计不是单单文字、图片的堆砌，它就像人的脸。首先，我们要把五官摆正。然后，我们再去选择使用丹凤眼、柳叶眉和樱桃口等样式组合成一张我们理想的脸。&lt;/p&gt;
-&lt;h1 id=&quot;最后再说几句&quot;&gt;&lt;a href=&quot;#最后再说几句&quot; class=&quot;headerlink&quot; title=&quot;最后再说几句&quot;&gt;&lt;/a&gt;最后再说几句&lt;/h1&gt;&lt;p&gt;学习的过程中一定要有想法！学习的过程中一定要有想法！学习的过程中一定要有想法！（重要的事情说三遍）尤其是在软件这一行，我们应该迫不及待地将学到的东西应用起来。无论是公益性的，还是你准备用来盈利的，只有做出来才会真正有所收获。&lt;/p&gt;
-</content>
+    <content type="html"><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>有段时间没写点什么了，也确实最近在忙些事情。但是，我一直觉得人吸收知识就像牛吃草一样。先吞下去存储在胃里，然后过段时间再取出来咀嚼几番，最后才能吸收。而我咀嚼的方式就是将学习的东西写出来。最近沉浸在枯燥的数据挖掘算法太久，所以便跳出来寻找其他知识来汲取些“水分”。然后，在Github上无聊翻翻的时候，便对前端技术产生了兴趣。<br><a id="more"></a></p>
+<h1 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h1><p>“工欲善其事，必先利其器”。我们学习一门新的技术，当然希望先准备好相应的环境，以及完备的指导资料。打开百度，输入“前端学习”、“html+css+js”什么的就会蹦出一堆学习网站任君挑选。权威点的，像<a href="http://www.w3school.com.cn/" target="_blank" rel="external">w3school</a>、<a href="http://www.runoob.com/" target="_blank" rel="external">菜鸟教程</a>什么的，界面也比较清爽，知识与实践配套结合，都很适合初学者学习。但是，我在这里还是要安利另一个学习网站：<a href="https://www.freecodecamp.com/" target="_blank" rel="external">FreeCodeCamp</a>。这是个Github上的老牌项目了，11万+的Star也充分说明了其受欢迎的程度。感兴趣的同学可以通过这个<a href="https://github.com/FreeCodeCamp/FreeCodeCamp" target="_blank" rel="external">传送门</a>了解下。<br><img src="https://camo.githubusercontent.com/60c67cf9ac2db30d478d21755289c423e1f985c6/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f66726565636f646563616d702f776964652d736f6369616c2d62616e6e65722e706e67" alt="FreeCodeCamp"></p>
+<h1 id="开始学习"><a href="#开始学习" class="headerlink" title="开始学习"></a>开始学习</h1><p>至此，我们正式进入学习阶段。你以为我要照着教程开始教你从标签开始认起了吗？当然不可能。这些FreeCodeCamp上都有。我们直接跳到第一个任务：Build a Tribute Page。相比前面的提示性操作不同，这个任务完全让我们自由发挥。当然，他提供了一个示例页面。参考页面的大致外观可以，但是千万不要直接去看源码！然后你会发现，即使一个简单的静态页面，如何去设计它也是一门艺术。下面我便通过自己的经历来举个例子。<br>这是官方的<a href="https://codepen.io/FreeCodeCamp/full/NNvBQW/" target="_blank" rel="external">样例</a>：<br><img src="http://7xs74n.com1.z0.glb.clouddn.com/QQ%E6%88%AA%E5%9B%BE20160426103432.png" alt="官方样例"><br>这是我的<a href="https://codepen.io/longfengno1/full/ONoPpy/" target="_blank" rel="external">作品</a>（其实我是个伪歌迷=。=）：<br><img src="http://7xs74n.com1.z0.glb.clouddn.com/QQ%E6%88%AA%E5%9B%BE20160426103557.png" alt="我的作品"><br>是不是看起来差不多，至少在预览效果上来看是这样的。可是，当我兴致冲冲地把我的作品发给朋友看的时候，却显示了一个图歪字斜的乱七八糟的页面（捂脸）。为什么会这样，我们看看两个页面的开头就知道了。<br>官方的开头：<br><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"container"</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"jumbotron"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"row"</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"col-xs-12"</span>&gt;</span></div></pre></td></tr></table></figure></p>
+<p>我的开头：<br><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"bodycolor"</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">div</span>&gt;</span></div></pre></td></tr></table></figure></p>
+<p>此外，在图片的引用中，我也没有加入自适应相关的类。所以，相比之下，我对于整个页面布局的设计太简陋了。痛定思痛，我便去查阅了一些相关资料。然后才了解到，W3C组织建议把所有网页上的对像放在一个盒(box)中，也就是我们常说的盒模型。盒模型中主要定义了四个区域：外边距(margin)、边框(border)、内容(content)、内边距(padding)。为了方便理解，我选取了两个图，分别从平面和3D的角度来解析这个盒模型：<br><img src="http://7xs74n.com1.z0.glb.clouddn.com/QQ%E6%88%AA%E5%9B%BE20160426110401.png" alt="平面角度"><br><img src="http://7xs74n.com1.z0.glb.clouddn.com/QQ%E6%88%AA%E5%9B%BE20160426110645.png" alt="3D角度"><br>网页的设计不是单单文字、图片的堆砌，它就像人的脸。首先，我们要把五官摆正。然后，我们再去选择使用丹凤眼、柳叶眉和樱桃口等样式组合成一张我们理想的脸。</p>
+<h1 id="最后再说几句"><a href="#最后再说几句" class="headerlink" title="最后再说几句"></a>最后再说几句</h1><p>学习的过程中一定要有想法！学习的过程中一定要有想法！学习的过程中一定要有想法！（重要的事情说三遍）尤其是在软件这一行，我们应该迫不及待地将学到的东西应用起来。无论是公益性的，还是你准备用来盈利的，只有做出来才会真正有所收获。</p>
+]]></content>
     
     <summary type="html">
     
@@ -50,118 +112,118 @@
     <published>2016-04-11T01:24:27.000Z</published>
     <updated>2016-04-12T06:01:11.884Z</updated>
     
-    <content type="html">&lt;h1 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h1&gt;&lt;p&gt;学习数据挖掘已经有一段时间了，相关的文章和书也看了一些，感觉学习这个的关键还是离不开其中形形色色的算法。作为一个初学者，我们也不奢求创新改进个算法。先从基础做起，学会各个基础算法的思想与实现。学习算法的过程是十分枯燥的，但是如果学习的过程能够实践，例如使用R语言实践一下，将一堆头痛眼花的数据转化成一张炫酷的图，这无疑是十分有成就感的。所以，我就最近学习的资料，整理了一些算法与R语言的实现方法分享一下。由于篇幅的问题，后面提到的函数我都没有详细介绍了，想了解的可以使用&lt;code&gt;&amp;gt;?函数名&lt;/code&gt;或&lt;code&gt;&amp;gt;??函数名&lt;/code&gt;查看。&lt;br&gt;&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;h1 id=&quot;分类&quot;&gt;&lt;a href=&quot;#分类&quot; class=&quot;headerlink&quot; title=&quot;分类&quot;&gt;&lt;/a&gt;分类&lt;/h1&gt;&lt;h2 id=&quot;1、KNN算法&quot;&gt;&lt;a href=&quot;#1、KNN算法&quot; class=&quot;headerlink&quot; title=&quot;1、KNN算法&quot;&gt;&lt;/a&gt;1、KNN算法&lt;/h2&gt;&lt;p&gt;K——最临近方法（k Nearest Neighbors，简称KNN）是实际运用中经常被采用的一种基于距离的分类算法。&lt;/p&gt;
-&lt;p&gt;基本思想：&lt;br&gt;假定每个类包含多个训练数据，且每个训练数据都有一个唯一的类别标记，计算每个训练数据到待分类元组的距离，取和待分类元组距离最近的k个训练数据，k个数据中哪个类别的训练数据占多数，则待分类元组就属于哪个类别。&lt;/p&gt;
-&lt;p&gt;主要函数：&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;knn()&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;加载R中的class库：&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;&gt; library(class)&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;实例：&lt;br&gt;&lt;figure class=&quot;highlight r&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; data(iris3)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;#选取前30个数据作为训练数据&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; train&amp;lt;-rbind(iris[&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;:&lt;span class=&quot;number&quot;&gt;30&lt;/span&gt;,,&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;],iris[&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;:&lt;span class=&quot;number&quot;&gt;30&lt;/span&gt;,,&lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;],iris[&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;:&lt;span class=&quot;number&quot;&gt;30&lt;/span&gt;,,&lt;span class=&quot;number&quot;&gt;3&lt;/span&gt;])&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;#剩下的作为测试数据&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; test&amp;lt;-rbind(iris[&lt;span class=&quot;number&quot;&gt;31&lt;/span&gt;:&lt;span class=&quot;number&quot;&gt;50&lt;/span&gt;,,&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;],iris[&lt;span class=&quot;number&quot;&gt;31&lt;/span&gt;:&lt;span class=&quot;number&quot;&gt;50&lt;/span&gt;,,&lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;],iris[&lt;span class=&quot;number&quot;&gt;31&lt;/span&gt;:&lt;span class=&quot;number&quot;&gt;50&lt;/span&gt;,,&lt;span class=&quot;number&quot;&gt;3&lt;/span&gt;])&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; c1&amp;lt;-factor(c(rep(&lt;span class=&quot;string&quot;&gt;&quot;s&quot;&lt;/span&gt;,&lt;span class=&quot;number&quot;&gt;30&lt;/span&gt;),rep(&lt;span class=&quot;string&quot;&gt;&quot;c&quot;&lt;/span&gt;,&lt;span class=&quot;number&quot;&gt;30&lt;/span&gt;),rep(&lt;span class=&quot;string&quot;&gt;&quot;v&quot;&lt;/span&gt;,&lt;span class=&quot;number&quot;&gt;30&lt;/span&gt;)))&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;#进行KNN算法分类&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; knn(train,test,c1,k=&lt;span class=&quot;number&quot;&gt;3&lt;/span&gt;,prob=&lt;span class=&quot;literal&quot;&gt;TRUE&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; attributes(.Last.value)&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
-&lt;h2 id=&quot;2、决策树算法（C4-5）&quot;&gt;&lt;a href=&quot;#2、决策树算法（C4-5）&quot; class=&quot;headerlink&quot; title=&quot;2、决策树算法（C4,5）&quot;&gt;&lt;/a&gt;2、决策树算法（C4,5）&lt;/h2&gt;&lt;p&gt;主要函数：&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;J48()&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;准备工作：&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;&gt; install.packages(‘rJava’)&lt;br&gt;&gt; install.packages(‘party’)&lt;br&gt;&gt; install.packages(‘RWeka’)&lt;br&gt;&gt; install.packages(‘partykit’)&lt;br&gt;&gt; library(RWeka)&lt;br&gt;&gt; library(party)&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;实例：&lt;br&gt;&lt;figure class=&quot;highlight r&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; oldpar=par(mar=c(&lt;span class=&quot;number&quot;&gt;3&lt;/span&gt;,&lt;span class=&quot;number&quot;&gt;3&lt;/span&gt;,&lt;span class=&quot;number&quot;&gt;1.5&lt;/span&gt;,&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;),mgp=c(&lt;span class=&quot;number&quot;&gt;1.5&lt;/span&gt;,&lt;span class=&quot;number&quot;&gt;0.5&lt;/span&gt;,&lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;),cex=&lt;span class=&quot;number&quot;&gt;0.3&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; data(iris)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; m1&amp;lt;-J48(Species~.,data=iris)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; m1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; table(iris$Species,predict(m1))&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; write_to_dot(m1)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; &lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt;(&lt;span class=&quot;keyword&quot;&gt;require&lt;/span&gt;(&lt;span class=&quot;string&quot;&gt;&quot;party&quot;&lt;/span&gt;,quietly=&lt;span class=&quot;literal&quot;&gt;TRUE&lt;/span&gt;)) plot(m1)&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
-&lt;p&gt;生成树如下：&lt;br&gt;&lt;img src=&quot;http://upload-images.jianshu.io/upload_images/1863202-0377acaefc8ac97d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240&quot; alt=&quot;C4,5生成的决策树&quot;&gt;&lt;/p&gt;
-&lt;h2 id=&quot;3、CART算法&quot;&gt;&lt;a href=&quot;#3、CART算法&quot; class=&quot;headerlink&quot; title=&quot;3、CART算法&quot;&gt;&lt;/a&gt;3、CART算法&lt;/h2&gt;&lt;p&gt;CART(Classification and Regression Tree，分类与回归树)。&lt;br&gt;主要函数：&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;tree()&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;准备工作：&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;&gt; install.packages(‘tree’)&lt;br&gt;&gt; library(tree)&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;实例：&lt;br&gt;&lt;figure class=&quot;highlight r&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;#设置窗口参数&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; oldpar=par(mar=c(&lt;span class=&quot;number&quot;&gt;3&lt;/span&gt;,&lt;span class=&quot;number&quot;&gt;3&lt;/span&gt;,&lt;span class=&quot;number&quot;&gt;1.5&lt;/span&gt;,&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;),mgp=c(&lt;span class=&quot;number&quot;&gt;1.5&lt;/span&gt;,&lt;span class=&quot;number&quot;&gt;0.5&lt;/span&gt;,&lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;),cex=&lt;span class=&quot;number&quot;&gt;0.7&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; data(iris)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;#对品种进行CART分类&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; ir.tr=tree(Species~.,iris)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; summary(ir.tr)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;#画决策树图&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; plot(ir.tr):text(ir.tr)&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
-&lt;p&gt;生成树如下：&lt;br&gt;&lt;img src=&quot;http://upload-images.jianshu.io/upload_images/1863202-060c899e0b5b0022.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240&quot; alt=&quot;CART生成的决策树&quot;&gt;&lt;/p&gt;
-&lt;h2 id=&quot;4、BP神经网络算法&quot;&gt;&lt;a href=&quot;#4、BP神经网络算法&quot; class=&quot;headerlink&quot; title=&quot;4、BP神经网络算法&quot;&gt;&lt;/a&gt;4、BP神经网络算法&lt;/h2&gt;&lt;p&gt;主要函数：&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;nnet()&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;准备工作：&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;&gt; install.packages(‘nnet’)&lt;br&gt;&gt; library(nnet)&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;实例：&lt;br&gt;&lt;figure class=&quot;highlight r&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; data(iris3)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; ir&amp;lt;-rbind(iris3[,,&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;],iris3[,,&lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;],iris3[,,&lt;span class=&quot;number&quot;&gt;3&lt;/span&gt;])&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; targets&amp;lt;-class.ind(c(rep(&lt;span class=&quot;string&quot;&gt;&quot;s&quot;&lt;/span&gt;,&lt;span class=&quot;number&quot;&gt;50&lt;/span&gt;),rep(&lt;span class=&quot;string&quot;&gt;&quot;c&quot;&lt;/span&gt;,&lt;span class=&quot;number&quot;&gt;50&lt;/span&gt;),rep(&lt;span class=&quot;string&quot;&gt;&quot;v&quot;&lt;/span&gt;,&lt;span class=&quot;number&quot;&gt;50&lt;/span&gt;)))&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;#抽取25个样本&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; samp&amp;lt;-c(sample(&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;:&lt;span class=&quot;number&quot;&gt;50&lt;/span&gt;,&lt;span class=&quot;number&quot;&gt;25&lt;/span&gt;),sample(&lt;span class=&quot;number&quot;&gt;51&lt;/span&gt;:&lt;span class=&quot;number&quot;&gt;100&lt;/span&gt;,&lt;span class=&quot;number&quot;&gt;25&lt;/span&gt;),sample(&lt;span class=&quot;number&quot;&gt;101&lt;/span&gt;:&lt;span class=&quot;number&quot;&gt;150&lt;/span&gt;,&lt;span class=&quot;number&quot;&gt;25&lt;/span&gt;))&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; ir1&amp;lt;-nnet(ir[samp,],targets[samp,],size=&lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;,rang=&lt;span class=&quot;number&quot;&gt;0.1&lt;/span&gt;,decay=&lt;span class=&quot;number&quot;&gt;5e-4&lt;/span&gt;,maxit=&lt;span class=&quot;number&quot;&gt;200&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; test.c1&amp;lt;-&lt;span class=&quot;keyword&quot;&gt;function&lt;/span&gt;(true,pred)&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;+ true&amp;lt;-max.col(true)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;+ cres&amp;lt;-max.col(pred)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;+ table(true,cres)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;#对样本以外的数据的测试&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; test.c1(targets[-samp,],predict(ir1,ir[-samp,]))&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
-&lt;h1 id=&quot;聚类&quot;&gt;&lt;a href=&quot;#聚类&quot; class=&quot;headerlink&quot; title=&quot;聚类&quot;&gt;&lt;/a&gt;聚类&lt;/h1&gt;&lt;h2 id=&quot;1、K-means算法&quot;&gt;&lt;a href=&quot;#1、K-means算法&quot; class=&quot;headerlink&quot; title=&quot;1、K-means算法&quot;&gt;&lt;/a&gt;1、K-means算法&lt;/h2&gt;&lt;p&gt;K-means算法是典型的基于距离的聚类算法，采用距离作为相似性的评价指标，即认为两个对象的距离越近，其相似度就越大。&lt;/p&gt;
-&lt;p&gt;主要函数：&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;kmeans()&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;实例：&lt;br&gt;&lt;figure class=&quot;highlight r&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;#随机生成样本数据&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; x&amp;lt;-rbind(matrix(rnorm(&lt;span class=&quot;number&quot;&gt;10000&lt;/span&gt;,sd=&lt;span class=&quot;number&quot;&gt;0.3&lt;/span&gt;),ncol=&lt;span class=&quot;number&quot;&gt;10&lt;/span&gt;),matrix(rnorm(&lt;span class=&quot;number&quot;&gt;10000&lt;/span&gt;,mean=&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;,sd=&lt;span class=&quot;number&quot;&gt;0.3&lt;/span&gt;),ncol=&lt;span class=&quot;number&quot;&gt;10&lt;/span&gt;))&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; colnames(x)&amp;lt;-c(&lt;span class=&quot;string&quot;&gt;&quot;x1&quot;&lt;/span&gt;,&lt;span class=&quot;string&quot;&gt;&quot;x2&quot;&lt;/span&gt;,&lt;span class=&quot;string&quot;&gt;&quot;x3&quot;&lt;/span&gt;,&lt;span class=&quot;string&quot;&gt;&quot;x4&quot;&lt;/span&gt;,&lt;span class=&quot;string&quot;&gt;&quot;x5&quot;&lt;/span&gt;,&lt;span class=&quot;string&quot;&gt;&quot;x6&quot;&lt;/span&gt;,&lt;span class=&quot;string&quot;&gt;&quot;x7&quot;&lt;/span&gt;,&lt;span class=&quot;string&quot;&gt;&quot;x8&quot;&lt;/span&gt;,&lt;span class=&quot;string&quot;&gt;&quot;x9&quot;&lt;/span&gt;,&lt;span class=&quot;string&quot;&gt;&quot;x10&quot;&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;#调用K-means算法&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; c1&amp;lt;-Kmeans(x,&lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; pch1=rep(&lt;span class=&quot;string&quot;&gt;&quot;1&quot;&lt;/span&gt;,&lt;span class=&quot;number&quot;&gt;1000&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; pch2=rep(&lt;span class=&quot;string&quot;&gt;&quot;2&quot;&lt;/span&gt;,&lt;span class=&quot;number&quot;&gt;1000&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; plot(x,col=c1$cluster,pch=c(pch1,pch2))&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; points(c1$centers,col=&lt;span class=&quot;number&quot;&gt;3&lt;/span&gt;,pch=&lt;span class=&quot;string&quot;&gt;&quot;*&quot;&lt;/span&gt;,cex=&lt;span class=&quot;number&quot;&gt;3&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
-&lt;h2 id=&quot;2、PAM算法&quot;&gt;&lt;a href=&quot;#2、PAM算法&quot; class=&quot;headerlink&quot; title=&quot;2、PAM算法&quot;&gt;&lt;/a&gt;2、PAM算法&lt;/h2&gt;&lt;p&gt;PAM(Partitioning around Medoid，围绕中心点的划分)是最早提出的k-medoids算法之一。它试图对n个对象给出k个划分。最初随机选择k个中心点后，该算法反复地试图找出更好的中心点。&lt;/p&gt;
-&lt;p&gt;主要函数：&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;pam()&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;准备工作：&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;&gt; library(cluster)&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;实例：&lt;br&gt;&lt;figure class=&quot;highlight r&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; pamx=pam(x,&lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; summary(pamx)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; plot(pamx,main=&lt;span class=&quot;string&quot;&gt;&quot;pam效果图&quot;&lt;/span&gt;)   &lt;span class=&quot;comment&quot;&gt;#数据集同上&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
-&lt;h2 id=&quot;3、Clara算法&quot;&gt;&lt;a href=&quot;#3、Clara算法&quot; class=&quot;headerlink&quot; title=&quot;3、Clara算法&quot;&gt;&lt;/a&gt;3、Clara算法&lt;/h2&gt;&lt;p&gt;主要思想：不考虑整个数据集合，选择实际数据的一小部分作为数据的样本，然后用PAM方法从样本中选择中心点。如果样本是以随机形式选取的，它应当足以代表原来的数据集合。从中选出的代表对象（中心点）很可能与从整个数据集合中选出的非常近似Clara抽取数据集合的多个样本，对每个样本应用PAM算法，返回最好的聚类结果作为输出。&lt;/p&gt;
-&lt;p&gt;主要函数：&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;clara()&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;准备工作：&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;&gt; library(cluster)&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;实例：&lt;br&gt;&lt;figure class=&quot;highlight r&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; clarax=clara(x,&lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; clarax&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; clarax$clusinfo&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; plot(clarax,main=&lt;span class=&quot;string&quot;&gt;&quot;clara图&quot;&lt;/span&gt;)  &lt;span class=&quot;comment&quot;&gt;#数据集同上&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
-&lt;h1 id=&quot;层次聚类&quot;&gt;&lt;a href=&quot;#层次聚类&quot; class=&quot;headerlink&quot; title=&quot;层次聚类&quot;&gt;&lt;/a&gt;层次聚类&lt;/h1&gt;&lt;h2 id=&quot;1、AGNES算法与DIANA算法&quot;&gt;&lt;a href=&quot;#1、AGNES算法与DIANA算法&quot; class=&quot;headerlink&quot; title=&quot;1、AGNES算法与DIANA算法&quot;&gt;&lt;/a&gt;1、AGNES算法与DIANA算法&lt;/h2&gt;&lt;p&gt;AGNES(Agglomerative Nesting)算法是凝聚的层次聚类方法。最初将每个对象作为一个簇，然后这些簇根据某些准则一步步地合并，直到所有的对象最终合并到一个簇中或某个终结条件被满足。&lt;br&gt;DIANA(Divisive ANAlysis)算法是分裂的层次聚类方法。采用自顶向下的策略，它首先将所有对象置于一个簇中，然后逐渐细分为越来越小的簇，直到每个对象自成一簇或某个终结条件被满足。&lt;/p&gt;
-&lt;p&gt;主要函数：&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;agnes()、diana()&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;准备工作：&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;&gt; library(cluster)&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;实例：&lt;br&gt;AGNES和DIANA算法的比较&lt;br&gt;&lt;figure class=&quot;highlight r&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;#将图形显示区划为两部分&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; par(mfrow=c(&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;,&lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;))&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; data(flower)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; dai.f=daisy(flower,type=list(asymm=&lt;span class=&quot;number&quot;&gt;3&lt;/span&gt;,ordratio=&lt;span class=&quot;number&quot;&gt;7&lt;/span&gt;))&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; agn.f=agnes(dai.f,method=&lt;span class=&quot;string&quot;&gt;&quot;ward&quot;&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; plot(agn.f,which.plot=&lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;,cex=&lt;span class=&quot;number&quot;&gt;0.7&lt;/span&gt;,yaxt=&lt;span class=&quot;string&quot;&gt;&quot;n&quot;&lt;/span&gt;,main=&lt;span class=&quot;string&quot;&gt;&quot;agnes算法的聚类图&quot;&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; dia.f=diana(dai.f)  &lt;span class=&quot;comment&quot;&gt;#注意这里dia.f与dai.f不同&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; plot(dia.f,which.plot=&lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;,main=&lt;span class=&quot;string&quot;&gt;&quot;diana算法的聚类图&quot;&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
-&lt;p&gt;结果图如下：&lt;br&gt;&lt;img src=&quot;http://upload-images.jianshu.io/upload_images/1863202-2128ea9d6676999a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240&quot; alt=&quot;agnes与diana算法的比较(这个图画的有点丑，大家可以自己试下。。。)&quot;&gt;&lt;/p&gt;
-&lt;h1 id=&quot;基于密度聚类&quot;&gt;&lt;a href=&quot;#基于密度聚类&quot; class=&quot;headerlink&quot; title=&quot;基于密度聚类&quot;&gt;&lt;/a&gt;基于密度聚类&lt;/h1&gt;&lt;p&gt;主要思想：只要临近区域的密度（对象或数据点的数目）超过某个阀值，就继续聚类。&lt;/p&gt;
-&lt;p&gt;优点：可以过滤“噪声”孤立点数据，发现任意形状的簇。&lt;/p&gt;
-&lt;h2 id=&quot;1、DBSCAN算法&quot;&gt;&lt;a href=&quot;#1、DBSCAN算法&quot; class=&quot;headerlink&quot; title=&quot;1、DBSCAN算法&quot;&gt;&lt;/a&gt;1、DBSCAN算法&lt;/h2&gt;&lt;p&gt;DBSCAN(Density-Based Spatial Clustering of Application with Noise)是一个有代表性的基于密度的方法，它根据一个密度阀值来控制簇的增长。&lt;/p&gt;
-&lt;p&gt;主要函数：&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;DBSCAN()&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;准备工作：&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;&gt; library(cluster)&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;实例：&lt;br&gt;&lt;figure class=&quot;highlight r&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; dflower&amp;lt;-daisy(flower,type=list(asymm=c(&lt;span class=&quot;string&quot;&gt;&quot;V1&quot;&lt;/span&gt;,&lt;span class=&quot;string&quot;&gt;&quot;V3&quot;&lt;/span&gt;),symm=&lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;,norminal=&lt;span class=&quot;number&quot;&gt;4&lt;/span&gt;,ordinal=c(&lt;span class=&quot;number&quot;&gt;5&lt;/span&gt;,&lt;span class=&quot;number&quot;&gt;6&lt;/span&gt;),ordratio=&lt;span class=&quot;number&quot;&gt;7&lt;/span&gt;,logratio=&lt;span class=&quot;number&quot;&gt;8&lt;/span&gt;))&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; DBF=DBSCAN(dflower,eps=&lt;span class=&quot;number&quot;&gt;0.65&lt;/span&gt;,MinPts=&lt;span class=&quot;number&quot;&gt;5&lt;/span&gt;,distances=&lt;span class=&quot;literal&quot;&gt;T&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; DBF&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
-&lt;h1 id=&quot;基于模型聚类&quot;&gt;&lt;a href=&quot;#基于模型聚类&quot; class=&quot;headerlink&quot; title=&quot;基于模型聚类&quot;&gt;&lt;/a&gt;基于模型聚类&lt;/h1&gt;&lt;h2 id=&quot;1、COBWEB算法&quot;&gt;&lt;a href=&quot;#1、COBWEB算法&quot; class=&quot;headerlink&quot; title=&quot;1、COBWEB算法&quot;&gt;&lt;/a&gt;1、COBWEB算法&lt;/h2&gt;&lt;p&gt;COBWEB是一种流行的简增量概念聚类算法。它以一个分类树的形式创建层次聚类，每个节点对应一个概念，包含该概念的一个概率描述，概述被分在该节点下的对象。&lt;/p&gt;
-&lt;p&gt;主要函数：&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;Cobweb()&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;准备工作：&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;&gt; install.packages(‘RWeka’)&lt;br&gt;&gt; library(RWeka)&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;实例：&lt;br&gt;&lt;figure class=&quot;highlight r&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; com=rbind(cbind(rnorm(&lt;span class=&quot;number&quot;&gt;20&lt;/span&gt;,&lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;,&lt;span class=&quot;number&quot;&gt;0.5&lt;/span&gt;),rnorm(&lt;span class=&quot;number&quot;&gt;20&lt;/span&gt;,&lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;,&lt;span class=&quot;number&quot;&gt;0.5&lt;/span&gt;)),cbind(rnorm(&lt;span class=&quot;number&quot;&gt;30&lt;/span&gt;,&lt;span class=&quot;number&quot;&gt;5&lt;/span&gt;,&lt;span class=&quot;number&quot;&gt;0.5&lt;/span&gt;),rnorm(&lt;span class=&quot;number&quot;&gt;30&lt;/span&gt;,&lt;span class=&quot;number&quot;&gt;5&lt;/span&gt;,&lt;span class=&quot;number&quot;&gt;0.5&lt;/span&gt;)))&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; clas=factor(rep(&lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;:&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;,c(&lt;span class=&quot;number&quot;&gt;20&lt;/span&gt;,&lt;span class=&quot;number&quot;&gt;30&lt;/span&gt;)))&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; dcom=data.frame(com,clas)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; c1&amp;lt;-Cobweb(dcom)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; c1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; c1$class_ids&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; table(predict(c1),dcom$clas)&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
-&lt;h1 id=&quot;模糊聚类&quot;&gt;&lt;a href=&quot;#模糊聚类&quot; class=&quot;headerlink&quot; title=&quot;模糊聚类&quot;&gt;&lt;/a&gt;模糊聚类&lt;/h1&gt;&lt;h2 id=&quot;1、FCM算法&quot;&gt;&lt;a href=&quot;#1、FCM算法&quot; class=&quot;headerlink&quot; title=&quot;1、FCM算法&quot;&gt;&lt;/a&gt;1、FCM算法&lt;/h2&gt;&lt;p&gt;FCM(Fuzzy C-Means)算法是一个模糊聚类算法，不同于硬划分，模糊聚类方法是一个软划分。对于模糊集来说，一个数据点都是以一定程度属于某个类，也可以同时以不周的程度属于几个类。&lt;/p&gt;
-&lt;p&gt;主要函数：&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;fanny()&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;准备工作：&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;&gt; library(cluster)&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;实例：&lt;br&gt;&lt;figure class=&quot;highlight r&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; z=rbind(cbind(rnorm(&lt;span class=&quot;number&quot;&gt;100&lt;/span&gt;,&lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;,&lt;span class=&quot;number&quot;&gt;0.5&lt;/span&gt;),rnorm(&lt;span class=&quot;number&quot;&gt;100&lt;/span&gt;,&lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;,&lt;span class=&quot;number&quot;&gt;0.5&lt;/span&gt;)),cbind(rnorm(&lt;span class=&quot;number&quot;&gt;150&lt;/span&gt;,&lt;span class=&quot;number&quot;&gt;5&lt;/span&gt;,&lt;span class=&quot;number&quot;&gt;0.5&lt;/span&gt;),rnorm(&lt;span class=&quot;number&quot;&gt;150&lt;/span&gt;,&lt;span class=&quot;number&quot;&gt;5&lt;/span&gt;,&lt;span class=&quot;number&quot;&gt;0.5&lt;/span&gt;),cbind(rnorm(&lt;span class=&quot;number&quot;&gt;300&lt;/span&gt;,&lt;span class=&quot;number&quot;&gt;3.2&lt;/span&gt;,&lt;span class=&quot;number&quot;&gt;0.5&lt;/span&gt;),rnorm(&lt;span class=&quot;number&quot;&gt;300&lt;/span&gt;,&lt;span class=&quot;number&quot;&gt;3.2&lt;/span&gt;,&lt;span class=&quot;number&quot;&gt;0.5&lt;/span&gt;))))&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; z&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; fannyz=fanny(z,&lt;span class=&quot;number&quot;&gt;3&lt;/span&gt;,metric=&lt;span class=&quot;string&quot;&gt;&quot;SqEuclidean&quot;&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; summary(fannyz)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; plot(fannyz,main=&lt;span class=&quot;string&quot;&gt;&quot;模糊算法聚类图&quot;&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
-&lt;p&gt;参考文献&lt;br&gt;&lt;em&gt;方匡南. 基于数据挖掘的分类和聚类算法研究及R语言实现[D]. 暨南大学, 2007.&lt;/em&gt;&lt;/p&gt;
-</content>
+    <content type="html"><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>学习数据挖掘已经有一段时间了，相关的文章和书也看了一些，感觉学习这个的关键还是离不开其中形形色色的算法。作为一个初学者，我们也不奢求创新改进个算法。先从基础做起，学会各个基础算法的思想与实现。学习算法的过程是十分枯燥的，但是如果学习的过程能够实践，例如使用R语言实践一下，将一堆头痛眼花的数据转化成一张炫酷的图，这无疑是十分有成就感的。所以，我就最近学习的资料，整理了一些算法与R语言的实现方法分享一下。由于篇幅的问题，后面提到的函数我都没有详细介绍了，想了解的可以使用<code>&gt;?函数名</code>或<code>&gt;??函数名</code>查看。<br><a id="more"></a></p>
+<h1 id="分类"><a href="#分类" class="headerlink" title="分类"></a>分类</h1><h2 id="1、KNN算法"><a href="#1、KNN算法" class="headerlink" title="1、KNN算法"></a>1、KNN算法</h2><p>K——最临近方法（k Nearest Neighbors，简称KNN）是实际运用中经常被采用的一种基于距离的分类算法。</p>
+<p>基本思想：<br>假定每个类包含多个训练数据，且每个训练数据都有一个唯一的类别标记，计算每个训练数据到待分类元组的距离，取和待分类元组距离最近的k个训练数据，k个数据中哪个类别的训练数据占多数，则待分类元组就属于哪个类别。</p>
+<p>主要函数：</p>
+<blockquote>
+<p>knn()</p>
+</blockquote>
+<p>加载R中的class库：</p>
+<blockquote>
+<p>> library(class)</p>
+</blockquote>
+<p>实例：<br><figure class="highlight r"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">&gt; data(iris3)</div><div class="line"><span class="comment">#选取前30个数据作为训练数据</span></div><div class="line">&gt; train&lt;-rbind(iris[<span class="number">1</span>:<span class="number">30</span>,,<span class="number">1</span>],iris[<span class="number">1</span>:<span class="number">30</span>,,<span class="number">2</span>],iris[<span class="number">1</span>:<span class="number">30</span>,,<span class="number">3</span>])</div><div class="line"><span class="comment">#剩下的作为测试数据</span></div><div class="line">&gt; test&lt;-rbind(iris[<span class="number">31</span>:<span class="number">50</span>,,<span class="number">1</span>],iris[<span class="number">31</span>:<span class="number">50</span>,,<span class="number">2</span>],iris[<span class="number">31</span>:<span class="number">50</span>,,<span class="number">3</span>])</div><div class="line">&gt; c1&lt;-factor(c(rep(<span class="string">"s"</span>,<span class="number">30</span>),rep(<span class="string">"c"</span>,<span class="number">30</span>),rep(<span class="string">"v"</span>,<span class="number">30</span>)))</div><div class="line"><span class="comment">#进行KNN算法分类</span></div><div class="line">&gt; knn(train,test,c1,k=<span class="number">3</span>,prob=<span class="literal">TRUE</span>)</div><div class="line">&gt; attributes(.Last.value)</div></pre></td></tr></table></figure></p>
+<h2 id="2、决策树算法（C4-5）"><a href="#2、决策树算法（C4-5）" class="headerlink" title="2、决策树算法（C4,5）"></a>2、决策树算法（C4,5）</h2><p>主要函数：</p>
+<blockquote>
+<p>J48()</p>
+</blockquote>
+<p>准备工作：</p>
+<blockquote>
+<p>> install.packages(‘rJava’)<br>> install.packages(‘party’)<br>> install.packages(‘RWeka’)<br>> install.packages(‘partykit’)<br>> library(RWeka)<br>> library(party)</p>
+</blockquote>
+<p>实例：<br><figure class="highlight r"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">&gt; oldpar=par(mar=c(<span class="number">3</span>,<span class="number">3</span>,<span class="number">1.5</span>,<span class="number">1</span>),mgp=c(<span class="number">1.5</span>,<span class="number">0.5</span>,<span class="number">0</span>),cex=<span class="number">0.3</span>)</div><div class="line">&gt; data(iris)</div><div class="line">&gt; m1&lt;-J48(Species~.,data=iris)</div><div class="line">&gt; m1</div><div class="line">&gt; table(iris$Species,predict(m1))</div><div class="line">&gt; write_to_dot(m1)</div><div class="line">&gt; <span class="keyword">if</span>(<span class="keyword">require</span>(<span class="string">"party"</span>,quietly=<span class="literal">TRUE</span>)) plot(m1)</div></pre></td></tr></table></figure></p>
+<p>生成树如下：<br><img src="http://upload-images.jianshu.io/upload_images/1863202-0377acaefc8ac97d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="C4,5生成的决策树"></p>
+<h2 id="3、CART算法"><a href="#3、CART算法" class="headerlink" title="3、CART算法"></a>3、CART算法</h2><p>CART(Classification and Regression Tree，分类与回归树)。<br>主要函数：</p>
+<blockquote>
+<p>tree()</p>
+</blockquote>
+<p>准备工作：</p>
+<blockquote>
+<p>> install.packages(‘tree’)<br>> library(tree)</p>
+</blockquote>
+<p>实例：<br><figure class="highlight r"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#设置窗口参数</span></div><div class="line">&gt; oldpar=par(mar=c(<span class="number">3</span>,<span class="number">3</span>,<span class="number">1.5</span>,<span class="number">1</span>),mgp=c(<span class="number">1.5</span>,<span class="number">0.5</span>,<span class="number">0</span>),cex=<span class="number">0.7</span>)</div><div class="line">&gt; data(iris)</div><div class="line"><span class="comment">#对品种进行CART分类</span></div><div class="line">&gt; ir.tr=tree(Species~.,iris)</div><div class="line">&gt; summary(ir.tr)</div><div class="line"><span class="comment">#画决策树图</span></div><div class="line">&gt; plot(ir.tr):text(ir.tr)</div></pre></td></tr></table></figure></p>
+<p>生成树如下：<br><img src="http://upload-images.jianshu.io/upload_images/1863202-060c899e0b5b0022.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="CART生成的决策树"></p>
+<h2 id="4、BP神经网络算法"><a href="#4、BP神经网络算法" class="headerlink" title="4、BP神经网络算法"></a>4、BP神经网络算法</h2><p>主要函数：</p>
+<blockquote>
+<p>nnet()</p>
+</blockquote>
+<p>准备工作：</p>
+<blockquote>
+<p>> install.packages(‘nnet’)<br>> library(nnet)</p>
+</blockquote>
+<p>实例：<br><figure class="highlight r"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">&gt; data(iris3)</div><div class="line">&gt; ir&lt;-rbind(iris3[,,<span class="number">1</span>],iris3[,,<span class="number">2</span>],iris3[,,<span class="number">3</span>])</div><div class="line">&gt; targets&lt;-class.ind(c(rep(<span class="string">"s"</span>,<span class="number">50</span>),rep(<span class="string">"c"</span>,<span class="number">50</span>),rep(<span class="string">"v"</span>,<span class="number">50</span>)))</div><div class="line"><span class="comment">#抽取25个样本</span></div><div class="line">&gt; samp&lt;-c(sample(<span class="number">1</span>:<span class="number">50</span>,<span class="number">25</span>),sample(<span class="number">51</span>:<span class="number">100</span>,<span class="number">25</span>),sample(<span class="number">101</span>:<span class="number">150</span>,<span class="number">25</span>))</div><div class="line">&gt; ir1&lt;-nnet(ir[samp,],targets[samp,],size=<span class="number">2</span>,rang=<span class="number">0.1</span>,decay=<span class="number">5e-4</span>,maxit=<span class="number">200</span>)</div><div class="line">&gt; test.c1&lt;-<span class="keyword">function</span>(true,pred)&#123;</div><div class="line">+ true&lt;-max.col(true)</div><div class="line">+ cres&lt;-max.col(pred)</div><div class="line">+ table(true,cres)</div><div class="line">&#125;</div><div class="line"><span class="comment">#对样本以外的数据的测试</span></div><div class="line">&gt; test.c1(targets[-samp,],predict(ir1,ir[-samp,]))</div></pre></td></tr></table></figure></p>
+<h1 id="聚类"><a href="#聚类" class="headerlink" title="聚类"></a>聚类</h1><h2 id="1、K-means算法"><a href="#1、K-means算法" class="headerlink" title="1、K-means算法"></a>1、K-means算法</h2><p>K-means算法是典型的基于距离的聚类算法，采用距离作为相似性的评价指标，即认为两个对象的距离越近，其相似度就越大。</p>
+<p>主要函数：</p>
+<blockquote>
+<p>kmeans()</p>
+</blockquote>
+<p>实例：<br><figure class="highlight r"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#随机生成样本数据</span></div><div class="line">&gt; x&lt;-rbind(matrix(rnorm(<span class="number">10000</span>,sd=<span class="number">0.3</span>),ncol=<span class="number">10</span>),matrix(rnorm(<span class="number">10000</span>,mean=<span class="number">1</span>,sd=<span class="number">0.3</span>),ncol=<span class="number">10</span>))</div><div class="line">&gt; colnames(x)&lt;-c(<span class="string">"x1"</span>,<span class="string">"x2"</span>,<span class="string">"x3"</span>,<span class="string">"x4"</span>,<span class="string">"x5"</span>,<span class="string">"x6"</span>,<span class="string">"x7"</span>,<span class="string">"x8"</span>,<span class="string">"x9"</span>,<span class="string">"x10"</span>)</div><div class="line"><span class="comment">#调用K-means算法</span></div><div class="line">&gt; c1&lt;-Kmeans(x,<span class="number">2</span>)</div><div class="line">&gt; pch1=rep(<span class="string">"1"</span>,<span class="number">1000</span>)</div><div class="line">&gt; pch2=rep(<span class="string">"2"</span>,<span class="number">1000</span>)</div><div class="line">&gt; plot(x,col=c1$cluster,pch=c(pch1,pch2))</div><div class="line">&gt; points(c1$centers,col=<span class="number">3</span>,pch=<span class="string">"*"</span>,cex=<span class="number">3</span>)</div></pre></td></tr></table></figure></p>
+<h2 id="2、PAM算法"><a href="#2、PAM算法" class="headerlink" title="2、PAM算法"></a>2、PAM算法</h2><p>PAM(Partitioning around Medoid，围绕中心点的划分)是最早提出的k-medoids算法之一。它试图对n个对象给出k个划分。最初随机选择k个中心点后，该算法反复地试图找出更好的中心点。</p>
+<p>主要函数：</p>
+<blockquote>
+<p>pam()</p>
+</blockquote>
+<p>准备工作：</p>
+<blockquote>
+<p>> library(cluster)</p>
+</blockquote>
+<p>实例：<br><figure class="highlight r"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&gt; pamx=pam(x,<span class="number">2</span>)</div><div class="line">&gt; summary(pamx)</div><div class="line">&gt; plot(pamx,main=<span class="string">"pam效果图"</span>)   <span class="comment">#数据集同上</span></div></pre></td></tr></table></figure></p>
+<h2 id="3、Clara算法"><a href="#3、Clara算法" class="headerlink" title="3、Clara算法"></a>3、Clara算法</h2><p>主要思想：不考虑整个数据集合，选择实际数据的一小部分作为数据的样本，然后用PAM方法从样本中选择中心点。如果样本是以随机形式选取的，它应当足以代表原来的数据集合。从中选出的代表对象（中心点）很可能与从整个数据集合中选出的非常近似Clara抽取数据集合的多个样本，对每个样本应用PAM算法，返回最好的聚类结果作为输出。</p>
+<p>主要函数：</p>
+<blockquote>
+<p>clara()</p>
+</blockquote>
+<p>准备工作：</p>
+<blockquote>
+<p>> library(cluster)</p>
+</blockquote>
+<p>实例：<br><figure class="highlight r"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&gt; clarax=clara(x,<span class="number">2</span>)</div><div class="line">&gt; clarax</div><div class="line">&gt; clarax$clusinfo</div><div class="line">&gt; plot(clarax,main=<span class="string">"clara图"</span>)  <span class="comment">#数据集同上</span></div></pre></td></tr></table></figure></p>
+<h1 id="层次聚类"><a href="#层次聚类" class="headerlink" title="层次聚类"></a>层次聚类</h1><h2 id="1、AGNES算法与DIANA算法"><a href="#1、AGNES算法与DIANA算法" class="headerlink" title="1、AGNES算法与DIANA算法"></a>1、AGNES算法与DIANA算法</h2><p>AGNES(Agglomerative Nesting)算法是凝聚的层次聚类方法。最初将每个对象作为一个簇，然后这些簇根据某些准则一步步地合并，直到所有的对象最终合并到一个簇中或某个终结条件被满足。<br>DIANA(Divisive ANAlysis)算法是分裂的层次聚类方法。采用自顶向下的策略，它首先将所有对象置于一个簇中，然后逐渐细分为越来越小的簇，直到每个对象自成一簇或某个终结条件被满足。</p>
+<p>主要函数：</p>
+<blockquote>
+<p>agnes()、diana()</p>
+</blockquote>
+<p>准备工作：</p>
+<blockquote>
+<p>> library(cluster)</p>
+</blockquote>
+<p>实例：<br>AGNES和DIANA算法的比较<br><figure class="highlight r"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#将图形显示区划为两部分</span></div><div class="line">&gt; par(mfrow=c(<span class="number">1</span>,<span class="number">2</span>))</div><div class="line">&gt; data(flower)</div><div class="line">&gt; dai.f=daisy(flower,type=list(asymm=<span class="number">3</span>,ordratio=<span class="number">7</span>))</div><div class="line">&gt; agn.f=agnes(dai.f,method=<span class="string">"ward"</span>)</div><div class="line">&gt; plot(agn.f,which.plot=<span class="number">2</span>,cex=<span class="number">0.7</span>,yaxt=<span class="string">"n"</span>,main=<span class="string">"agnes算法的聚类图"</span>)</div><div class="line">&gt; dia.f=diana(dai.f)  <span class="comment">#注意这里dia.f与dai.f不同</span></div><div class="line">&gt; plot(dia.f,which.plot=<span class="number">2</span>,main=<span class="string">"diana算法的聚类图"</span>)</div></pre></td></tr></table></figure></p>
+<p>结果图如下：<br><img src="http://upload-images.jianshu.io/upload_images/1863202-2128ea9d6676999a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="agnes与diana算法的比较(这个图画的有点丑，大家可以自己试下。。。)"></p>
+<h1 id="基于密度聚类"><a href="#基于密度聚类" class="headerlink" title="基于密度聚类"></a>基于密度聚类</h1><p>主要思想：只要临近区域的密度（对象或数据点的数目）超过某个阀值，就继续聚类。</p>
+<p>优点：可以过滤“噪声”孤立点数据，发现任意形状的簇。</p>
+<h2 id="1、DBSCAN算法"><a href="#1、DBSCAN算法" class="headerlink" title="1、DBSCAN算法"></a>1、DBSCAN算法</h2><p>DBSCAN(Density-Based Spatial Clustering of Application with Noise)是一个有代表性的基于密度的方法，它根据一个密度阀值来控制簇的增长。</p>
+<p>主要函数：</p>
+<blockquote>
+<p>DBSCAN()</p>
+</blockquote>
+<p>准备工作：</p>
+<blockquote>
+<p>> library(cluster)</p>
+</blockquote>
+<p>实例：<br><figure class="highlight r"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&gt; dflower&lt;-daisy(flower,type=list(asymm=c(<span class="string">"V1"</span>,<span class="string">"V3"</span>),symm=<span class="number">2</span>,norminal=<span class="number">4</span>,ordinal=c(<span class="number">5</span>,<span class="number">6</span>),ordratio=<span class="number">7</span>,logratio=<span class="number">8</span>))</div><div class="line">&gt; DBF=DBSCAN(dflower,eps=<span class="number">0.65</span>,MinPts=<span class="number">5</span>,distances=<span class="literal">T</span>)</div><div class="line">&gt; DBF</div></pre></td></tr></table></figure></p>
+<h1 id="基于模型聚类"><a href="#基于模型聚类" class="headerlink" title="基于模型聚类"></a>基于模型聚类</h1><h2 id="1、COBWEB算法"><a href="#1、COBWEB算法" class="headerlink" title="1、COBWEB算法"></a>1、COBWEB算法</h2><p>COBWEB是一种流行的简增量概念聚类算法。它以一个分类树的形式创建层次聚类，每个节点对应一个概念，包含该概念的一个概率描述，概述被分在该节点下的对象。</p>
+<p>主要函数：</p>
+<blockquote>
+<p>Cobweb()</p>
+</blockquote>
+<p>准备工作：</p>
+<blockquote>
+<p>> install.packages(‘RWeka’)<br>> library(RWeka)</p>
+</blockquote>
+<p>实例：<br><figure class="highlight r"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">&gt; com=rbind(cbind(rnorm(<span class="number">20</span>,<span class="number">0</span>,<span class="number">0.5</span>),rnorm(<span class="number">20</span>,<span class="number">0</span>,<span class="number">0.5</span>)),cbind(rnorm(<span class="number">30</span>,<span class="number">5</span>,<span class="number">0.5</span>),rnorm(<span class="number">30</span>,<span class="number">5</span>,<span class="number">0.5</span>)))</div><div class="line">&gt; clas=factor(rep(<span class="number">2</span>:<span class="number">1</span>,c(<span class="number">20</span>,<span class="number">30</span>)))</div><div class="line">&gt; dcom=data.frame(com,clas)</div><div class="line">&gt; c1&lt;-Cobweb(dcom)</div><div class="line">&gt; c1</div><div class="line">&gt; c1$class_ids</div><div class="line">&gt; table(predict(c1),dcom$clas)</div></pre></td></tr></table></figure></p>
+<h1 id="模糊聚类"><a href="#模糊聚类" class="headerlink" title="模糊聚类"></a>模糊聚类</h1><h2 id="1、FCM算法"><a href="#1、FCM算法" class="headerlink" title="1、FCM算法"></a>1、FCM算法</h2><p>FCM(Fuzzy C-Means)算法是一个模糊聚类算法，不同于硬划分，模糊聚类方法是一个软划分。对于模糊集来说，一个数据点都是以一定程度属于某个类，也可以同时以不周的程度属于几个类。</p>
+<p>主要函数：</p>
+<blockquote>
+<p>fanny()</p>
+</blockquote>
+<p>准备工作：</p>
+<blockquote>
+<p>> library(cluster)</p>
+</blockquote>
+<p>实例：<br><figure class="highlight r"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&gt; z=rbind(cbind(rnorm(<span class="number">100</span>,<span class="number">0</span>,<span class="number">0.5</span>),rnorm(<span class="number">100</span>,<span class="number">0</span>,<span class="number">0.5</span>)),cbind(rnorm(<span class="number">150</span>,<span class="number">5</span>,<span class="number">0.5</span>),rnorm(<span class="number">150</span>,<span class="number">5</span>,<span class="number">0.5</span>),cbind(rnorm(<span class="number">300</span>,<span class="number">3.2</span>,<span class="number">0.5</span>),rnorm(<span class="number">300</span>,<span class="number">3.2</span>,<span class="number">0.5</span>))))</div><div class="line">&gt; z</div><div class="line">&gt; fannyz=fanny(z,<span class="number">3</span>,metric=<span class="string">"SqEuclidean"</span>)</div><div class="line">&gt; summary(fannyz)</div><div class="line">&gt; plot(fannyz,main=<span class="string">"模糊算法聚类图"</span>)</div></pre></td></tr></table></figure></p>
+<p>参考文献<br><em>方匡南. 基于数据挖掘的分类和聚类算法研究及R语言实现[D]. 暨南大学, 2007.</em></p>
+]]></content>
     
     <summary type="html">
     
@@ -183,64 +245,64 @@
     <published>2016-04-05T08:42:44.000Z</published>
     <updated>2016-04-06T02:50:40.295Z</updated>
     
-    <content type="html">&lt;p&gt;在对数据进行分类前，对数据的预处理可以提高分类预测的准确性、有效性和可伸缩性。以下是几种数据预处理：&lt;br&gt;&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;&lt;br&gt;1、数据清理：为了消除和减少数据噪声和处理缺失值的数据预处理。虽然大部分的分类算法都会处理噪声和缺失值，但在进行分类对数据的清理可以减少学习时的混乱。&lt;br&gt;2、相关性分析：数据中很多属性可能与分类预测任务不相关或是冗余的。因此在分类前进行相关性分析可以删除学习过程中不相关的或是冗余的属性，提高分类预测的效率和准确率。&lt;br&gt;3、数据变换：分类前的数据变换主要有概念分层和规范化两种。概念分层就是连续值属性概化为离散的区间，压缩了原来的训练数据，学习时可以减少输入输出操作。规范化是将给定属性的所有值按比例缩放，使得它们落入较小的指定区间，比如落入【0，1】内，可以防止具有较大初始域的属性相对于具有较小初始域的属性权种过大，该方法常用于神经网络和距离度量方法。&lt;/p&gt;
-&lt;p&gt;&lt;em&gt;引自：方匡南. 基于数据挖掘的分类和聚类算法研究及R语言实现[D]. 暨南大学, 2007.&lt;/em&gt;&lt;/p&gt;
-&lt;hr&gt;
-&lt;h1 id=&quot;数据缺失&quot;&gt;&lt;a href=&quot;#数据缺失&quot; class=&quot;headerlink&quot; title=&quot;数据缺失&quot;&gt;&lt;/a&gt;数据缺失&lt;/h1&gt;&lt;p&gt;当处理含有缺失值（NA）的数据时，可以运用以下几种最常见的策略：&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;将含有缺失值的案例剔除。&lt;/li&gt;
-&lt;li&gt;根据变量之间的相关性关系填补缺失值。&lt;/li&gt;
-&lt;li&gt;根据案例之间的相似性填补缺失值。&lt;/li&gt;
-&lt;li&gt;使用能够处理缺失值数据的工具。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;下文的例子都用到了”DMwR”包，读取数据代码如下：&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;&amp;gt; library(DMwR)
-&amp;gt; data(algae)
-&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&quot;将缺失部分剔除&quot;&gt;&lt;a href=&quot;#将缺失部分剔除&quot; class=&quot;headerlink&quot; title=&quot;将缺失部分剔除&quot;&gt;&lt;/a&gt;将缺失部分剔除&lt;/h2&gt;&lt;p&gt;将含有缺失值的案例剔除非常容易实现，尤其是当这些记录所占的比例在可用数据集中非常小的时候，这个选择就比较合理。因此，我们在选择这个方案时先检查观测值，或者至少得到这些观测值的个数。&lt;br&gt;例如：&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;&amp;gt; algae[!complete.case(algae),]
+    <content type="html"><![CDATA[<p>在对数据进行分类前，对数据的预处理可以提高分类预测的准确性、有效性和可伸缩性。以下是几种数据预处理：<br><a id="more"></a><br>1、数据清理：为了消除和减少数据噪声和处理缺失值的数据预处理。虽然大部分的分类算法都会处理噪声和缺失值，但在进行分类对数据的清理可以减少学习时的混乱。<br>2、相关性分析：数据中很多属性可能与分类预测任务不相关或是冗余的。因此在分类前进行相关性分析可以删除学习过程中不相关的或是冗余的属性，提高分类预测的效率和准确率。<br>3、数据变换：分类前的数据变换主要有概念分层和规范化两种。概念分层就是连续值属性概化为离散的区间，压缩了原来的训练数据，学习时可以减少输入输出操作。规范化是将给定属性的所有值按比例缩放，使得它们落入较小的指定区间，比如落入【0，1】内，可以防止具有较大初始域的属性相对于具有较小初始域的属性权种过大，该方法常用于神经网络和距离度量方法。</p>
+<p><em>引自：方匡南. 基于数据挖掘的分类和聚类算法研究及R语言实现[D]. 暨南大学, 2007.</em></p>
+<hr>
+<h1 id="数据缺失"><a href="#数据缺失" class="headerlink" title="数据缺失"></a>数据缺失</h1><p>当处理含有缺失值（NA）的数据时，可以运用以下几种最常见的策略：</p>
+<ul>
+<li>将含有缺失值的案例剔除。</li>
+<li>根据变量之间的相关性关系填补缺失值。</li>
+<li>根据案例之间的相似性填补缺失值。</li>
+<li>使用能够处理缺失值数据的工具。</li>
+</ul>
+<p>下文的例子都用到了”DMwR”包，读取数据代码如下：</p>
+<pre><code>&gt; library(DMwR)
+&gt; data(algae)
+</code></pre><h2 id="将缺失部分剔除"><a href="#将缺失部分剔除" class="headerlink" title="将缺失部分剔除"></a>将缺失部分剔除</h2><p>将含有缺失值的案例剔除非常容易实现，尤其是当这些记录所占的比例在可用数据集中非常小的时候，这个选择就比较合理。因此，我们在选择这个方案时先检查观测值，或者至少得到这些观测值的个数。<br>例如：</p>
+<pre><code>&gt; algae[!complete.case(algae),]
  ...
  ...
-&amp;gt; nrow(algae[!complete.case(algae),])
+&gt; nrow(algae[!complete.case(algae),])
  [1] 16
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;函数complete.case()产生一个布尔值向量，该向量的元素个数与algae数据框中的行数相同，如果数据框的相应行中不含NA值，则函数返回TRUE。如果直接删除所有含有至少一个NA的样本，我们可以输入：&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;&amp;gt; algae&amp;lt;-na.omit(algae)
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;然而这种办法太过极端，我们一般不采用。但是对于某些缺失值太多的样本我们可以直接剔除，因为他们几乎是无用的样本。观测方法可通过如下代码：&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;&amp;gt; apply(algae,1,function(x) sum(is.na(x)))
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;然而之前我们加载的”DMwR”包中有相关处理函数，应用如下：&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;&amp;gt; algae&amp;lt;-algae[-manyNAs(algae),]
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;函数manyNAs()的功能是找出缺失值个数大于列数20%的行，第二个参数默认值是0.2。&lt;/p&gt;
-&lt;h2 id=&quot;用最高频率来填补缺失值&quot;&gt;&lt;a href=&quot;#用最高频率来填补缺失值&quot; class=&quot;headerlink&quot; title=&quot;用最高频率来填补缺失值&quot;&gt;&lt;/a&gt;用最高频率来填补缺失值&lt;/h2&gt;&lt;p&gt;填补含有缺失值记录的另一个方法是尝试找到这些缺失值最可能的值。这里也有多种策略可以选择，不同策略对逼近程度和算法复杂度的权衡不同。&lt;br&gt;填补缺失数据最简便和快捷的方法是使用一些代表中心趋势的值。代表中心趋势的值反映了变量分布的最常见值，因此中心趋势值是最自然的选择。然而，中心趋势值也有很多种，如平均值、中位数、众数等。如何选择还要由变量的分布决定。对于接近正态分布来说，所有的观测值都较好地聚集在平均值周围，平均数就是最佳选择。然而对于偏态分布，平均值就不适用。另一方面，离群值（极值）的存在会扭曲平均值（这些可以通过箱式图观测到）。下面我们列举几个填补例子：&lt;br&gt;用平均值填补：&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;&amp;gt; algae[48,&amp;quot;mxPH&amp;quot;]&amp;lt;-mean(algae$mxPH,na.rm=T)
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;用中位数填补：&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;&amp;gt; algae[is.na(algae$Chla),&amp;quot;Chla&amp;quot;]&amp;lt;-median(algae$Chla,na.rm=T)
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;其中，na.rm是使计算时忽略缺失数据。当然，我们例子中用到的包下也提供了一个函数centralImputation()可以用数据的中心趋势值来填补缺失值。对数值型变量使用中位数，对名义变量使用众数。应用如下：&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;&amp;gt; data(algae)
-&amp;gt; algae&amp;lt;-algae[-manyNAs(algae),]
-&amp;gt; algae&amp;lt;-centralImputation(algae）
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;上述方法虽然快捷方便，但是它可能导致较大的数据偏差，影响后期的数据分析工作。&lt;/p&gt;
-&lt;h2 id=&quot;通过变量的相关关系来填补缺失值&quot;&gt;&lt;a href=&quot;#通过变量的相关关系来填补缺失值&quot; class=&quot;headerlink&quot; title=&quot;通过变量的相关关系来填补缺失值&quot;&gt;&lt;/a&gt;通过变量的相关关系来填补缺失值&lt;/h2&gt;&lt;p&gt;另一种获得较少偏差填补缺失值的方法是探寻变量之间的相关关系。我们可以通过以下命令：&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;&amp;gt; symnum(cor(algae[,4:18],use=&amp;quot;complete.obs&amp;quot;))
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;函数cor()的功能是产生变量之间的相关值矩阵，设定参数use=”complete.obs”可以使R在计算相关值时忽略含有NA的纪录。而函数symnum()是用来改善结果的输出形式的。&lt;br&gt;在找到相关性较高的两个变量后，我们开始寻找他们之间的线性相关关系，如下：&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;&amp;gt; data(algae)
-&amp;gt; algae&amp;lt;-algae[-manyNAs(algae),]
-&amp;gt; lm(PO4~oPO4,data=algae)
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;然后，我们通过线性关系计算缺失值的填补值。&lt;br&gt;如果PO4中存在多个缺失值，我们也可以通过构造一个函数来完成，如下：&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;&amp;gt; data(algae)
-&amp;gt; algae&amp;lt;-algae[-manyNAs(algae),]
-&amp;gt; fillPO4&amp;lt;-function(oP){
+</code></pre><p>函数complete.case()产生一个布尔值向量，该向量的元素个数与algae数据框中的行数相同，如果数据框的相应行中不含NA值，则函数返回TRUE。如果直接删除所有含有至少一个NA的样本，我们可以输入：</p>
+<pre><code>&gt; algae&lt;-na.omit(algae)
+</code></pre><p>然而这种办法太过极端，我们一般不采用。但是对于某些缺失值太多的样本我们可以直接剔除，因为他们几乎是无用的样本。观测方法可通过如下代码：</p>
+<pre><code>&gt; apply(algae,1,function(x) sum(is.na(x)))
+</code></pre><p>然而之前我们加载的”DMwR”包中有相关处理函数，应用如下：</p>
+<pre><code>&gt; algae&lt;-algae[-manyNAs(algae),]
+</code></pre><p>函数manyNAs()的功能是找出缺失值个数大于列数20%的行，第二个参数默认值是0.2。</p>
+<h2 id="用最高频率来填补缺失值"><a href="#用最高频率来填补缺失值" class="headerlink" title="用最高频率来填补缺失值"></a>用最高频率来填补缺失值</h2><p>填补含有缺失值记录的另一个方法是尝试找到这些缺失值最可能的值。这里也有多种策略可以选择，不同策略对逼近程度和算法复杂度的权衡不同。<br>填补缺失数据最简便和快捷的方法是使用一些代表中心趋势的值。代表中心趋势的值反映了变量分布的最常见值，因此中心趋势值是最自然的选择。然而，中心趋势值也有很多种，如平均值、中位数、众数等。如何选择还要由变量的分布决定。对于接近正态分布来说，所有的观测值都较好地聚集在平均值周围，平均数就是最佳选择。然而对于偏态分布，平均值就不适用。另一方面，离群值（极值）的存在会扭曲平均值（这些可以通过箱式图观测到）。下面我们列举几个填补例子：<br>用平均值填补：</p>
+<pre><code>&gt; algae[48,&quot;mxPH&quot;]&lt;-mean(algae$mxPH,na.rm=T)
+</code></pre><p>用中位数填补：</p>
+<pre><code>&gt; algae[is.na(algae$Chla),&quot;Chla&quot;]&lt;-median(algae$Chla,na.rm=T)
+</code></pre><p>其中，na.rm是使计算时忽略缺失数据。当然，我们例子中用到的包下也提供了一个函数centralImputation()可以用数据的中心趋势值来填补缺失值。对数值型变量使用中位数，对名义变量使用众数。应用如下：</p>
+<pre><code>&gt; data(algae)
+&gt; algae&lt;-algae[-manyNAs(algae),]
+&gt; algae&lt;-centralImputation(algae）
+</code></pre><p>上述方法虽然快捷方便，但是它可能导致较大的数据偏差，影响后期的数据分析工作。</p>
+<h2 id="通过变量的相关关系来填补缺失值"><a href="#通过变量的相关关系来填补缺失值" class="headerlink" title="通过变量的相关关系来填补缺失值"></a>通过变量的相关关系来填补缺失值</h2><p>另一种获得较少偏差填补缺失值的方法是探寻变量之间的相关关系。我们可以通过以下命令：</p>
+<pre><code>&gt; symnum(cor(algae[,4:18],use=&quot;complete.obs&quot;))
+</code></pre><p>函数cor()的功能是产生变量之间的相关值矩阵，设定参数use=”complete.obs”可以使R在计算相关值时忽略含有NA的纪录。而函数symnum()是用来改善结果的输出形式的。<br>在找到相关性较高的两个变量后，我们开始寻找他们之间的线性相关关系，如下：</p>
+<pre><code>&gt; data(algae)
+&gt; algae&lt;-algae[-manyNAs(algae),]
+&gt; lm(PO4~oPO4,data=algae)
+</code></pre><p>然后，我们通过线性关系计算缺失值的填补值。<br>如果PO4中存在多个缺失值，我们也可以通过构造一个函数来完成，如下：</p>
+<pre><code>&gt; data(algae)
+&gt; algae&lt;-algae[-manyNAs(algae),]
+&gt; fillPO4&lt;-function(oP){
   if(is.na(oP))
      return(NA)
   else return(42.897+1.293*oP)
  }
-&amp;gt; algae[is.na(algae$PO4),&amp;quot;PO4&amp;quot;]&amp;lt;-sapply(algae[is.na(algae$PO4),&amp;quot;oPO4&amp;quot;],fillPO4)
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;函数sapply()的第一个参数是一个向量，第二个参数是一个函数。作用是将函数结果应用到第一个参数中向量的每一个元素。&lt;br&gt;在上面的例子中由于我们使用的是相关值，所以只用到了数值变量而排除了名义变量与缺失值之间的关系。针对这个，我们可以通过直方图等形式进行观测（这里不多赘述，感兴趣的可以查阅原书）。&lt;/p&gt;
-&lt;h2 id=&quot;通过探索案例之间的相似性来填补缺失值&quot;&gt;&lt;a href=&quot;#通过探索案例之间的相似性来填补缺失值&quot; class=&quot;headerlink&quot; title=&quot;通过探索案例之间的相似性来填补缺失值&quot;&gt;&lt;/a&gt;通过探索案例之间的相似性来填补缺失值&lt;/h2&gt;&lt;p&gt;除了变量之间的相关性外，多个样本（行）之间的相似性也可以用来填补缺失值。度量相似性的指标有很多，常用的是欧式距离，这个距离可以非正式的定义为任何两个案例之的观测值之差的平方和。书中提供的包的函数knnImputation()可以实现上述操作，这个函数用一个欧式距离的变种来找到任何个案最近的k个邻居。使用方法如下：&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;&amp;gt; algae&amp;lt;-knnImputation(algae,k=10)
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;用中位数来填补：&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;&amp;gt; algae&amp;lt;-knnImputation(algae,k=10,meth=&amp;quot;median&amp;quot;)
-&lt;/code&gt;&lt;/pre&gt;&lt;h1 id=&quot;小结&quot;&gt;&lt;a href=&quot;#小结&quot; class=&quot;headerlink&quot; title=&quot;小结&quot;&gt;&lt;/a&gt;小结&lt;/h1&gt;&lt;p&gt;综合上述几个方法，各有优缺点，具体如何选择还应该根据分析领域的知识来确定。此外，根据个案之间的相似性来填补缺失值也有不合理处，例如可能存在不相关的变量扭曲相似性。对于这些大数据集问题，可以通过随机抽取样本的方法来计算它们之间的相似性。&lt;/p&gt;
-&lt;p&gt;&lt;em&gt;引自：《数据挖掘与R语言》（葡）Luis Torgo著&lt;/em&gt;&lt;/p&gt;
-</content>
+&gt; algae[is.na(algae$PO4),&quot;PO4&quot;]&lt;-sapply(algae[is.na(algae$PO4),&quot;oPO4&quot;],fillPO4)
+</code></pre><p>函数sapply()的第一个参数是一个向量，第二个参数是一个函数。作用是将函数结果应用到第一个参数中向量的每一个元素。<br>在上面的例子中由于我们使用的是相关值，所以只用到了数值变量而排除了名义变量与缺失值之间的关系。针对这个，我们可以通过直方图等形式进行观测（这里不多赘述，感兴趣的可以查阅原书）。</p>
+<h2 id="通过探索案例之间的相似性来填补缺失值"><a href="#通过探索案例之间的相似性来填补缺失值" class="headerlink" title="通过探索案例之间的相似性来填补缺失值"></a>通过探索案例之间的相似性来填补缺失值</h2><p>除了变量之间的相关性外，多个样本（行）之间的相似性也可以用来填补缺失值。度量相似性的指标有很多，常用的是欧式距离，这个距离可以非正式的定义为任何两个案例之的观测值之差的平方和。书中提供的包的函数knnImputation()可以实现上述操作，这个函数用一个欧式距离的变种来找到任何个案最近的k个邻居。使用方法如下：</p>
+<pre><code>&gt; algae&lt;-knnImputation(algae,k=10)
+</code></pre><p>用中位数来填补：</p>
+<pre><code>&gt; algae&lt;-knnImputation(algae,k=10,meth=&quot;median&quot;)
+</code></pre><h1 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h1><p>综合上述几个方法，各有优缺点，具体如何选择还应该根据分析领域的知识来确定。此外，根据个案之间的相似性来填补缺失值也有不合理处，例如可能存在不相关的变量扭曲相似性。对于这些大数据集问题，可以通过随机抽取样本的方法来计算它们之间的相似性。</p>
+<p><em>引自：《数据挖掘与R语言》（葡）Luis Torgo著</em></p>
+]]></content>
     
     <summary type="html">
     
@@ -262,28 +324,28 @@
     <published>2016-03-23T07:34:58.000Z</published>
     <updated>2016-03-25T01:29:10.613Z</updated>
     
-    <content type="html">&lt;p&gt;经历了两天多的辛苦，终于完成了自己博客的搭建。我用的是Hexo+Github搭建的静态博客，在参考了很多大神的&lt;a href=&quot;http://ibruce.info/2013/11/22/hexo-your-blog/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;教程&lt;/a&gt;下，最后也算是磕磕绊绊地完成了吧（当然还有很多不足的地方=。=）。&lt;br&gt;&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;&lt;br&gt;为什么突然会选择Hexo和Github来搭建自己的博客呢？一是因为markdown，这里强烈推荐下！刚接触markdown时就爱上了这门语言，写文章什么的太方便了，基本不用再用word什么的处理下了。其次，也是一个很重要的原因：Github上搭博客是免费的！作为一个程序猿，什么开源的、免费的东西当然是我最喜欢的东西。&lt;/p&gt;
-&lt;p&gt;好了，废话也不多说了，开这个博客的初衷也就是希望能和大家分享一些经验和相互学习。所以，作为我的第一篇文章，就和大家分享一下我在搭建博客中遇到的一些问题。简单的就不多说了，百度一下&lt;strong&gt;Hexo+Github&lt;/strong&gt;就会出来一堆教程。而且一些&lt;a href=&quot;http://theme-next.iissnan.com/getting-started.html#comment-system-duoshuo&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;官方文档&lt;/a&gt;什么的也说的很详细（我用的是Hexo下的Next主题）。下面是我遇到的一些比较纠结的问题：&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;1、本地测试时，&lt;a href=&quot;http://localhost:4000&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://localhost:4000&lt;/a&gt;一直登不上。&lt;/strong&gt;&lt;br&gt;首先，对于Hexo 3.X版本，服务器被独立成了个别模块，所以你必须先安装hexo-server才能使用。在GitBash里输入：&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;$ npm install hexo-server –save&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;安装完成后输入以下命令：&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;$ hexo server&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;或&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;$ hexo s&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;然后提示你你的网站在&lt;a href=&quot;http://localhost:4000&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://localhost:4000&lt;/a&gt;下启动。&lt;br&gt;我在这里的时候就一直登不上，估计是4000的端口被占用了。最后使用下面的命令修改了端口就成功，如下：&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;$ hexo s -p 5000&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;&lt;strong&gt;2、在配置_config.yml后，运行hexo g出错。&lt;/strong&gt;&lt;br&gt;这里大部分的错误就由于没有在“:”后面加空格时所导致的。&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;3、使用hexo deploy部署时老是失败&lt;/strong&gt;&lt;br&gt;这个问题是浪费我时间最多的一个问题了。每次使用hexo deploy部署时就会出现下图的情况：&lt;br&gt;&lt;img src=&quot;http://7xs74n.com1.z0.glb.clouddn.com/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.jpg&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
-&lt;p&gt;百度了很多方法，最后还在&lt;a href=&quot;https://github.com/hexojs/hexo/issues/857&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;这个&lt;/a&gt;上面找到了答案。我仔细观察了下自己文档下都没有.deploy这个文件。。所以后来重新又建了一个项目，按照官方文档一步步操作后才成功了。&lt;br&gt;以上就是我搭建过程中的一些经验了，如果感兴趣的或有问题的我们还可以一起讨论。&lt;/p&gt;
-</content>
+    <content type="html"><![CDATA[<p>经历了两天多的辛苦，终于完成了自己博客的搭建。我用的是Hexo+Github搭建的静态博客，在参考了很多大神的<a href="http://ibruce.info/2013/11/22/hexo-your-blog/" target="_blank" rel="external">教程</a>下，最后也算是磕磕绊绊地完成了吧（当然还有很多不足的地方=。=）。<br><a id="more"></a><br>为什么突然会选择Hexo和Github来搭建自己的博客呢？一是因为markdown，这里强烈推荐下！刚接触markdown时就爱上了这门语言，写文章什么的太方便了，基本不用再用word什么的处理下了。其次，也是一个很重要的原因：Github上搭博客是免费的！作为一个程序猿，什么开源的、免费的东西当然是我最喜欢的东西。</p>
+<p>好了，废话也不多说了，开这个博客的初衷也就是希望能和大家分享一些经验和相互学习。所以，作为我的第一篇文章，就和大家分享一下我在搭建博客中遇到的一些问题。简单的就不多说了，百度一下<strong>Hexo+Github</strong>就会出来一堆教程。而且一些<a href="http://theme-next.iissnan.com/getting-started.html#comment-system-duoshuo" target="_blank" rel="external">官方文档</a>什么的也说的很详细（我用的是Hexo下的Next主题）。下面是我遇到的一些比较纠结的问题：</p>
+<p><strong>1、本地测试时，<a href="http://localhost:4000" target="_blank" rel="external">http://localhost:4000</a>一直登不上。</strong><br>首先，对于Hexo 3.X版本，服务器被独立成了个别模块，所以你必须先安装hexo-server才能使用。在GitBash里输入：</p>
+<blockquote>
+<p>$ npm install hexo-server –save</p>
+</blockquote>
+<p>安装完成后输入以下命令：</p>
+<blockquote>
+<p>$ hexo server</p>
+</blockquote>
+<p>或</p>
+<blockquote>
+<p>$ hexo s</p>
+</blockquote>
+<p>然后提示你你的网站在<a href="http://localhost:4000" target="_blank" rel="external">http://localhost:4000</a>下启动。<br>我在这里的时候就一直登不上，估计是4000的端口被占用了。最后使用下面的命令修改了端口就成功，如下：</p>
+<blockquote>
+<p>$ hexo s -p 5000</p>
+</blockquote>
+<p><strong>2、在配置_config.yml后，运行hexo g出错。</strong><br>这里大部分的错误就由于没有在“:”后面加空格时所导致的。</p>
+<p><strong>3、使用hexo deploy部署时老是失败</strong><br>这个问题是浪费我时间最多的一个问题了。每次使用hexo deploy部署时就会出现下图的情况：<br><img src="http://7xs74n.com1.z0.glb.clouddn.com/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.jpg" alt=""></p>
+<p>百度了很多方法，最后还在<a href="https://github.com/hexojs/hexo/issues/857" target="_blank" rel="external">这个</a>上面找到了答案。我仔细观察了下自己文档下都没有.deploy这个文件。。所以后来重新又建了一个项目，按照官方文档一步步操作后才成功了。<br>以上就是我搭建过程中的一些经验了，如果感兴趣的或有问题的我们还可以一起讨论。</p>
+]]></content>
     
     <summary type="html">
     
