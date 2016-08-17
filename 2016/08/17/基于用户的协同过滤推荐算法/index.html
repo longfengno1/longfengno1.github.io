@@ -76,7 +76,7 @@
 <meta property="og:image" content="http://pic002.cnblogs.com/images/2012/161247/2012082013563135.png">
 <meta property="og:image" content="http://pic002.cnblogs.com/images/2012/161247/2012082013572893.png">
 <meta property="og:image" content="http://images.cnitblog.com/blog2015/70278/201504/292340566307942.png">
-<meta property="og:updated_time" content="2016-08-17T08:22:56.002Z">
+<meta property="og:updated_time" content="2016-08-17T08:51:47.539Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="基于用户的协同过滤推荐算法">
 <meta name="twitter:description" content="基本思想基于用户的协同过滤算法是通过用户的历史行为数据发现用户对商品或内容的喜欢(如商品购买，收藏，内容评论或分享)，并对这些喜好进行度量和打分。根据不同用户对相同商品或内容的态度和偏好程度计算用户之间的关系。在有相同喜好的用户间进行商品推荐。简单的说就是如果A,B两个用户都购买了x、y、z三本图书，并且给出了5星的好评。那么A和B就属于同一类用户。可以将A看过的图书w也推荐给用户B。">
@@ -348,7 +348,7 @@
 </ul>
 <p><img src="http://dl2.iteye.com/upload/attachment/0094/4274/922d66d8-2f00-3ab8-845d-1ab9c26a4b92.gif" alt="皮尔逊相关系数公式四"></p>
 <p><strong>上述四个公式等价，其中E是数学期望，cov表示协方差，N表示变量取值的个数。</strong></p>
-<h3 id="3、欧几里德距离评价"><a href="#3、欧几里德距离评价" class="headerlink" title="3、欧几里德距离评价"></a>3、欧几里德距离评价</h3><p>假定两个用户X、Y，均为n维向量，表示用户对n个商品的评分，那么X与Y的欧几里德距离就是：</p>
+<h3 id="3、欧几里德距离"><a href="#3、欧几里德距离" class="headerlink" title="3、欧几里德距离"></a>3、欧几里德距离</h3><p>假定两个用户X、Y，均为n维向量，表示用户对n个商品的评分，那么X与Y的欧几里德距离就是：</p>
 <p><img src="http://blog.chinaunix.net/attachment/201205/23/21718047_13377830777Dwd.png" alt="多维欧几里德距离公式"></p>
 <p>数值越小则代表相似度越高，但是对于不同的n，计算出来的距离不便于控制，所以需要进行如下转换：</p>
 <p><img src="http://blog.chinaunix.net/attachment/201205/23/21718047_1337785033ccNN.png" alt="相似度公式"></p>
@@ -537,7 +537,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#基本思想"><span class="nav-number">1.</span> <span class="nav-text">基本思想</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#具体实现"><span class="nav-number">2.</span> <span class="nav-text">具体实现</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#寻找用户间的相似度"><span class="nav-number">2.1.</span> <span class="nav-text">寻找用户间的相似度</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、Jaccard公式"><span class="nav-number">2.1.1.</span> <span class="nav-text">1、Jaccard公式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、皮尔逊相关系数"><span class="nav-number">2.1.2.</span> <span class="nav-text">2、皮尔逊相关系数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3、欧几里德距离评价"><span class="nav-number">2.1.3.</span> <span class="nav-text">3、欧几里德距离评价</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4、余弦距离"><span class="nav-number">2.1.4.</span> <span class="nav-text">4、余弦距离</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#推荐物品"><span class="nav-number">2.2.</span> <span class="nav-text">推荐物品</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#基本思想"><span class="nav-number">1.</span> <span class="nav-text">基本思想</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#具体实现"><span class="nav-number">2.</span> <span class="nav-text">具体实现</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#寻找用户间的相似度"><span class="nav-number">2.1.</span> <span class="nav-text">寻找用户间的相似度</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、Jaccard公式"><span class="nav-number">2.1.1.</span> <span class="nav-text">1、Jaccard公式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、皮尔逊相关系数"><span class="nav-number">2.1.2.</span> <span class="nav-text">2、皮尔逊相关系数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3、欧几里德距离"><span class="nav-number">2.1.3.</span> <span class="nav-text">3、欧几里德距离</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4、余弦距离"><span class="nav-number">2.1.4.</span> <span class="nav-text">4、余弦距离</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#推荐物品"><span class="nav-number">2.2.</span> <span class="nav-text">推荐物品</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator">
