@@ -82,7 +82,7 @@
 
 
 
-联系方式邮箱：&amp;#50;&amp;#x37;&amp;#57;&amp;#49;&amp;#52;&amp;#54;&amp;#52;&amp;#53;&amp;#48;&amp;#x40;&amp;#x71;&amp;#x71;&amp;#46;&amp;#x63;&amp;#111;&amp;#x6d;Blog：">
+联系方式邮箱：&amp;#x32;&amp;#55;&amp;#57;&amp;#49;&amp;#52;&amp;#x36;&amp;#x34;&amp;#53;&amp;#48;&amp;#x40;&amp;#x71;&amp;#113;&amp;#46;&amp;#x63;&amp;#111;&amp;#x6d;Blo">
 <meta property="og:type" content="website">
 <meta property="og:title" content="about">
 <meta property="og:url" content="https://longfengno1.github.io/about/index.html">
@@ -110,7 +110,7 @@
 
 
 
-联系方式邮箱：&amp;#50;&amp;#x37;&amp;#57;&amp;#49;&amp;#52;&amp;#54;&amp;#52;&amp;#53;&amp;#48;&amp;#x40;&amp;#x71;&amp;#x71;&amp;#46;&amp;#x63;&amp;#111;&amp;#x6d;Blog：">
+联系方式邮箱：&amp;#x32;&amp;#55;&amp;#57;&amp;#49;&amp;#52;&amp;#x36;&amp;#x34;&amp;#53;&amp;#48;&amp;#x40;&amp;#x71;&amp;#113;&amp;#46;&amp;#x63;&amp;#111;&amp;#x6d;Blo">
 <meta property="og:image" content="http://7xs74n.com1.z0.glb.clouddn.com/QQ%E6%88%AA%E5%9B%BE20160324154741.png">
 <meta property="og:updated_time" content="2016-03-24T07:49:56.274Z">
 <meta name="twitter:card" content="summary">
@@ -138,7 +138,7 @@
 
 
 
-联系方式邮箱：&amp;#50;&amp;#x37;&amp;#57;&amp;#49;&amp;#52;&amp;#54;&amp;#52;&amp;#53;&amp;#48;&amp;#x40;&amp;#x71;&amp;#x71;&amp;#46;&amp;#x63;&amp;#111;&amp;#x6d;Blog：">
+联系方式邮箱：&amp;#x32;&amp;#55;&amp;#57;&amp;#49;&amp;#52;&amp;#x36;&amp;#x34;&amp;#53;&amp;#48;&amp;#x40;&amp;#x71;&amp;#113;&amp;#46;&amp;#x63;&amp;#111;&amp;#x6d;Blo">
 <meta name="twitter:image" content="http://7xs74n.com1.z0.glb.clouddn.com/QQ%E6%88%AA%E5%9B%BE20160324154741.png">
 
 
@@ -278,9 +278,32 @@
       
 
       
+        <li class="menu-item menu-item-search">
+          
+            <a href="#" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
     </ul>
   
 
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
   
 </nav>
 
@@ -319,7 +342,7 @@
 </tr>
 </tbody>
 </table>
-<h1 id="联系方式"><a href="#联系方式" class="headerlink" title="联系方式"></a>联系方式</h1><p>邮箱：<a href="&#x6d;&#97;&#105;&#x6c;&#x74;&#x6f;&#x3a;&#50;&#x37;&#57;&#49;&#52;&#54;&#52;&#53;&#48;&#x40;&#x71;&#x71;&#46;&#x63;&#111;&#x6d;">&#50;&#x37;&#57;&#49;&#52;&#54;&#52;&#53;&#48;&#x40;&#x71;&#x71;&#46;&#x63;&#111;&#x6d;</a><br>Blog：<a href="https://longfengno1.github.io">https://longfengno1.github.io</a></p>
+<h1 id="联系方式"><a href="#联系方式" class="headerlink" title="联系方式"></a>联系方式</h1><p>邮箱：<a href="&#109;&#x61;&#105;&#108;&#116;&#x6f;&#x3a;&#x32;&#55;&#57;&#49;&#52;&#x36;&#x34;&#53;&#48;&#x40;&#x71;&#113;&#46;&#x63;&#111;&#x6d;">&#x32;&#55;&#57;&#49;&#52;&#x36;&#x34;&#53;&#48;&#x40;&#x71;&#113;&#46;&#x63;&#111;&#x6d;</a><br>Blog：<a href="https://longfengno1.github.io">https://longfengno1.github.io</a></p>
 <h1 id="二维码"><a href="#二维码" class="headerlink" title="二维码"></a>二维码</h1><p>WeChat<br><img src="http://7xs74n.com1.z0.glb.clouddn.com/QQ%E6%88%AA%E5%9B%BE20160324154741.png" alt=""></p>
 
     
@@ -575,6 +598,135 @@ translateInitilization();
 
   
   
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+       search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+    'use strict';
+    $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+            // get the contents from search data
+            isfetched = true;
+            $('.popup').detach().appendTo('.header-inner');
+            var datas = $( "entry", xmlResponse ).map(function() {
+                return {
+                    title: $( "title", this ).text(),
+                    content: $("content",this).text(),
+                    url: $( "url" , this).text()
+                };
+            }).get();
+            var $input = document.getElementById(search_id);
+            var $resultContent = document.getElementById(content_id);
+            $input.addEventListener('input', function(){
+                var matchcounts = 0;
+                var str='<ul class=\"search-result-list\">';                
+                var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                $resultContent.innerHTML = "";
+                if (this.value.trim().length > 1) {
+                // perform local searching
+                datas.forEach(function(data) {
+                    var isMatch = true;
+                    var content_index = [];
+                    var data_title = data.title.trim().toLowerCase();
+                    var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                    var data_url = data.url;
+                    var index_title = -1;
+                    var index_content = -1;
+                    var first_occur = -1;
+                    // only match artiles with not empty titles and contents
+                    if(data_title != '' && data_content != '') {
+                        keywords.forEach(function(keyword, i) {
+                            index_title = data_title.indexOf(keyword);
+                            index_content = data_content.indexOf(keyword);
+                            if( index_title < 0 && index_content < 0 ){
+                                isMatch = false;
+                            } else {
+                                if (index_content < 0) {
+                                    index_content = 0;
+                                }
+                                if (i == 0) {
+                                    first_occur = index_content;
+                                }
+                            }
+                        });
+                    }
+                    // show search results
+                    if (isMatch) {
+                        matchcounts += 1;
+                        str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                        var content = data.content.trim().replace(/<[^>]+>/g,"");
+                        if (first_occur >= 0) {
+                            // cut out 100 characters
+                            var start = first_occur - 20;
+                            var end = first_occur + 80;
+                            if(start < 0){
+                                start = 0;
+                            }
+                            if(start == 0){
+                                end = 50;
+                            }
+                            if(end > content.length){
+                                end = content.length;
+                            }
+                            var match_content = content.substring(start, end);
+                            // highlight all keywords
+                            keywords.forEach(function(keyword){
+                                var regS = new RegExp(keyword, "gi");
+                                match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                            });
+                            
+                            str += "<p class=\"search-result\">" + match_content +"...</p>"
+                        }
+                        str += "</li>";
+                    }
+                })};
+                str += "</ul>";
+                if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+                if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+                $resultContent.innerHTML = str;
+            });
+            proceedsearch();
+        }
+    });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').mousedown(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
   
 
   
